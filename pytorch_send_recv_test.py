@@ -6,9 +6,12 @@ import time
 
 def test_sync_send_recv_delay(args, device):
     print("<==== Test delay ====>")
-    dist.barrier()
     if args.rank == 0:
         send_tensor = torch.ones(1, dtype=torch.float32, device=device)
+        if args.use_cuda:
+            dist.barrier(device_ids=[args.cuda_id])
+        else:
+            dist.barrier()
         start_time = time.time()
         dist.send(send_tensor, dst=1)
         if args.use_cuda:
@@ -18,6 +21,10 @@ def test_sync_send_recv_delay(args, device):
         print('Send tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
     elif args.rank == 1:
         recv_tensor = torch.zeros(1, dtype=torch.float32, device=device)
+        if args.use_cuda:
+            dist.barrier(device_ids=[args.cuda_id])
+        else:
+            dist.barrier()
         start_time = time.time()
         dist.recv(recv_tensor, src=0)
         if args.use_cuda:
@@ -30,9 +37,12 @@ def test_sync_send_recv_delay(args, device):
 
 def test_sync_send_recv_bandwidth(args, device, estimated_delay=0):
     print("<==== Test bandwidth ====>")
-    dist.barrier()
     if args.rank == 0:
         send_tensor = torch.arange(args.dim, dtype=torch.float32, device=device)
+        if args.use_cuda:
+            dist.barrier(device_ids=[args.cuda_id])
+        else:
+            dist.barrier()
         start_time = time.time()
         dist.send(send_tensor, dst=1)
         if args.use_cuda:
@@ -44,6 +54,10 @@ def test_sync_send_recv_bandwidth(args, device, estimated_delay=0):
               estimated_bandwidth, "Gbps.")
     elif args.rank == 1:
         recv_tensor = torch.zeros(args.dim, dtype=torch.float32, device=device)
+        if args.use_cuda:
+            dist.barrier(device_ids=[args.cuda_id])
+        else:
+            dist.barrier()
         start_time = time.time()
         dist.recv(recv_tensor, src=0)
         if args.use_cuda:
@@ -75,6 +89,7 @@ def main():
     parser.add_argument('--iter', type=int, default=10, metavar='R',
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
+
     if args.use_cuda:
         assert (torch.cuda.is_available())
         device = torch.device('cuda', args.cuda_id)
@@ -82,6 +97,7 @@ def main():
         device = torch.device('cpu')
     dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
                             rank=args.rank, world_size=args.world_size)
+
     estimated_delay = 0
     for i in range(args.iter + 1):
         if i == 0:
