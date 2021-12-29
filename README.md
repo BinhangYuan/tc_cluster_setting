@@ -9,6 +9,10 @@
        
       git clone https://github.com/BinhangYuan/tc_cluster_setting.git
 
+- set the github cache (Optional) 
+
+      git config credential.helper 'cache --timeout=30000'
+
 ## Benchmark:
 
 - Run this for benchmark:
