@@ -14,7 +14,7 @@ def test_sync_send_recv_delay(args, device):
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
-        estimated_delay = end_time - start_time
+        estimated_delay = (end_time - start_time)/2
         print('Send tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
     elif args.rank == 1:
         recv_tensor = torch.zeros(1, dtype=torch.float32, device=device)
@@ -23,7 +23,7 @@ def test_sync_send_recv_delay(args, device):
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
-        estimated_delay = end_time - start_time
+        estimated_delay = (end_time - start_time)/2
         print('Recv tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
     return estimated_delay
 
