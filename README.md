@@ -24,10 +24,18 @@
 - PyTorch-gloo backend delay: 0.1 ms; bandwidth: 4.5 Gbps
 - PyTorch-nccl backend delay: 0.05 ms; bandwidth: 8.9 Gbps
 
-### Use tc to setup delay to 1 ms:
+### Use tc netem to setup delay to 1 ms:
 - PyTorch-gloo backend delay: 1.2 ms; bandwidth: 4.5 Gbps
 - PyTorch-nccl backend delay: <span style="color:red">0.05 ms </span>; bandwidth: 8.9 Gbps
 
-### Use tc to setup delay to 10 ms:
+### Use tc netem to setup delay to 10 ms:
 - PyTorch-gloo backend delay: 10.2 ms; bandwidth: <span style="color:red">1.05 Gbps </span>
-- PyTorch-nccl backend delay: <span style="color:red">0.05 ms </span>; <span style="color:red"> bandwidth: 6.5 Gbps </span>
+- PyTorch-nccl backend delay: <span style="color:red">0.05 ms </span>; bandwidth: <span style="color:red"> 6.5 Gbps </span>
+
+### Use tc netem to setup bandwidth to 1 Gbps:
+- PyTorch-gloo backend delay: 0.15 ms; bandwidth: 0.93 Gbps
+- PyTorch-nccl backend delay: 0.08 ms; bandwidth: 0.93 Gbps
+
+### Use tc tbf to setup bandwidth to 1 Gbps:
+- PyTorch-gloo backend delay: 0.1 ms; bandwidth: <span style="color:red">4.5</span> Gbps
+- PyTorch-nccl backend delay: 0.05 ms; bandwidth: <span style="color:red">8.9</span> Gbps
