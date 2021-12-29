@@ -18,3 +18,7 @@
 - Run this for benchmark:
      
       python3 pytorch_send_recv_test.py --dist-url tcp://XXX.XXX.XXX.XXX:9000 --world-size 2 --rank 0/1
+
+## Results (AWS p3.2xlarge):
+### default network:
+- gloo backend delay:

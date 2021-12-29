@@ -91,8 +91,11 @@ def main():
     estimated_delay /= args.iter
     print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
     estimated_bandwidth = 0
-    for _ in range(args.iter):
-        estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, estimated_delay)
+    for i in range(args.iter + 1):
+        if i == 0:
+            test_sync_send_recv_bandwidth(args, device, estimated_delay)
+        else:
+            estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, estimated_delay)
     estimated_bandwidth /= args.iter
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
 
