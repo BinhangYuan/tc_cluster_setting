@@ -110,6 +110,7 @@ def main():
             test_sync_send_recv_delay(args, device, communicator)
         else:
             estimated_delay += test_sync_send_recv_delay(args, device, communicator)
+        time.sleep(1)
     estimated_delay /= args.iter
     print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
     estimated_bandwidth = 0
@@ -118,6 +119,7 @@ def main():
             test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
         else:
             estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
+        time.sleep(1)
     estimated_bandwidth /= args.iter
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
 
