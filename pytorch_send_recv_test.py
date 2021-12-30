@@ -1,10 +1,11 @@
 import torch
 import argparse
-import torch.distributed as dist
 import time
+import torch.distributed as dist
+from nccl_backend import NCCLCommunicator
 
 
-def test_sync_send_recv_delay(args, device):
+def test_sync_send_recv_delay(args, device, communicator):
     print("<==== Test delay ====>")
     if args.rank == 0:
         send_tensor = torch.ones(1, dtype=torch.float32, device=device)
@@ -13,7 +14,7 @@ def test_sync_send_recv_delay(args, device):
         else:
             dist.barrier()
         start_time = time.time()
-        dist.send(send_tensor, dst=1)
+        communicator.send(send_tensor, dst=1)
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -26,7 +27,7 @@ def test_sync_send_recv_delay(args, device):
         else:
             dist.barrier()
         start_time = time.time()
-        dist.recv(recv_tensor, src=0)
+        communicator.recv(recv_tensor, src=0)
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -35,7 +36,7 @@ def test_sync_send_recv_delay(args, device):
     return estimated_delay
 
 
-def test_sync_send_recv_bandwidth(args, device, estimated_delay=0):
+def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0):
     print("<==== Test bandwidth ====>")
     if args.rank == 0:
         send_tensor = torch.arange(args.dim, dtype=torch.float32, device=device)
@@ -44,7 +45,7 @@ def test_sync_send_recv_bandwidth(args, device, estimated_delay=0):
         else:
             dist.barrier()
         start_time = time.time()
-        dist.send(send_tensor, dst=1)
+        communicator.send(send_tensor, dst=1)
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -59,7 +60,7 @@ def test_sync_send_recv_bandwidth(args, device, estimated_delay=0):
         else:
             dist.barrier()
         start_time = time.time()
-        dist.recv(recv_tensor, src=0)
+        communicator.recv(recv_tensor, src=0)
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -95,23 +96,28 @@ def main():
         device = torch.device('cuda', args.cuda_id)
     else:
         device = torch.device('cpu')
-    dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
-                            rank=args.rank, world_size=args.world_size)
+    if args.dist_backend == 'cupy_nccl':
+        communicator = NCCLCommunicator(rank=args.rank, intra_gpu_rank=args.cuda_id,
+                                        world_size=args.world_size, master_ip=args.dist_url)
+    else:
+        dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
+                                rank=args.rank, world_size=args.world_size)
+        communicator = dist
 
     estimated_delay = 0
     for i in range(args.iter + 1):
         if i == 0:
-            test_sync_send_recv_delay(args, device)
+            test_sync_send_recv_delay(args, device, communicator)
         else:
-            estimated_delay += test_sync_send_recv_delay(args, device)
+            estimated_delay += test_sync_send_recv_delay(args, device, communicator)
     estimated_delay /= args.iter
     print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
     estimated_bandwidth = 0
     for i in range(args.iter + 1):
         if i == 0:
-            test_sync_send_recv_bandwidth(args, device, estimated_delay)
+            test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
         else:
-            estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, estimated_delay)
+            estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
     estimated_bandwidth /= args.iter
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
 
