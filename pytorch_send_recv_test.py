@@ -10,8 +10,10 @@ def test_sync_send_recv_delay(args, device, communicator):
     print("<==== Test delay ====>")
     if args.rank == 0:
         send_tensor = torch.ones(1, dtype=torch.float32, device=device)
+        send_tensor += random.random()
         if args.dist_backend == 'nccl':
             dist.barrier(device_ids=[args.cuda_id])
+            torch.cuda.synchronize()
         else:
             dist.barrier()
         start_time = time.time()
