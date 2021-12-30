@@ -16,8 +16,12 @@ def test_sync_send_recv_delay(args, device, communicator):
             torch.cuda.synchronize()
         else:
             dist.barrier()
+        if args.use_cuda:
+            torch.cuda.synchronize()
         start_time = time.time()
+
         communicator.send(send_tensor, dst=1)
+
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -29,8 +33,12 @@ def test_sync_send_recv_delay(args, device, communicator):
             dist.barrier(device_ids=[args.cuda_id])
         else:
             dist.barrier()
+        if args.use_cuda:
+            torch.cuda.synchronize()
         start_time = time.time()
+
         communicator.recv(recv_tensor, src=0)
+
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
@@ -46,18 +54,23 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
     print("<==== Test bandwidth ====>")
     if args.rank == 0:
         send_tensor = torch.arange(args.dim, dtype=torch.float32, device=device)
+
         if args.dist_backend == 'nccl':
             dist.barrier(device_ids=[args.cuda_id])
         else:
             dist.barrier()
+        if args.use_cuda:
+            torch.cuda.synchronize()
         start_time = time.time()
+
         communicator.send(send_tensor, dst=1)
+
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
-        send_time = end_time - start_time
-        estimated_bandwidth = 8 * 4 * args.dim / (send_time - estimated_delay) / 1024 / 1024 / 1024
-        print('Send tensor is done: tensor size:<', args.dim, "> takes:", send_time, "second, estimated bandwidth:",
+        total_time = end_time - start_time
+        estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
+        print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
     elif args.rank == 1:
         recv_tensor = torch.zeros(args.dim, dtype=torch.float32, device=device)
@@ -65,19 +78,23 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
             dist.barrier(device_ids=[args.cuda_id])
         else:
             dist.barrier()
+        if args.use_cuda:
+            torch.cuda.synchronize()
         start_time = time.time()
+
         communicator.recv(recv_tensor, src=0)
+
         if args.use_cuda:
             torch.cuda.synchronize()
         end_time = time.time()
-        recv_time = end_time - start_time
-        estimated_bandwidth = 8 * 4 * args.dim / (recv_time - estimated_delay) / 1024 / 1024 / 1024
-        print('Send tensor is done: tensor size:<', args.dim, "> takes:", recv_time, "second, estimated bandwidth:",
+        total_time = end_time - start_time
+        estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
+        print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
         recv_tensor += random.random()
         if args.use_cuda:
             torch.cuda.synchronize()
-    return estimated_bandwidth
+    return estimated_bandwidth, total_time
 
 
 def main():
@@ -123,14 +140,20 @@ def main():
     estimated_delay /= args.iter
     print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
     estimated_bandwidth = 0
+    e2e_time = 0
     for i in range(args.iter + 1):
         if i == 0:
             test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
         else:
-            estimated_bandwidth += test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
+            current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
+            estimated_bandwidth += current_bandwidth
+            e2e_time += current_time
         time.sleep(1)
     estimated_bandwidth /= args.iter
+    current_time /= args.iter
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
+    print("<=====Averaged end to end time: ", current_time, "s for sending <", 4 * args.dim / 1024/1024,
+          "> MB data=====>")
 
 
 if __name__ == '__main__':

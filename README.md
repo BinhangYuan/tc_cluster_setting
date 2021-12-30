@@ -11,9 +11,14 @@
        
       git clone https://github.com/BinhangYuan/tc_cluster_setting.git
 
-- set the github cache (Optional) 
+- Set the github cache (Optional) 
 
       git config credential.helper 'cache --timeout=30000'
+
+- Set network interface:
+
+      export NCCL_SOCKET_IFNAME=ens3
+      export GLOO_SOCKET_IFNAME=ens3
 
 ## Benchmark:
 
