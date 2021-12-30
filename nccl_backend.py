@@ -54,6 +54,7 @@ class NCCLCommunicator:
              tensor: torch.Tensor,
              dst: int,
              stream=cupy.cuda.Stream.null):
+        cupy.cuda.nccl.groupStart()
         self.comm.send(
             tensor.data_ptr(),
             torch.numel(tensor),
@@ -61,11 +62,13 @@ class NCCLCommunicator:
             dst,
             stream.ptr
         )
+        cupy.cuda.nccl.groupEnd()
 
     def recv(self,
              tensor: torch.Tensor,
              src: int,
              stream=cupy.cuda.Stream.null):
+        cupy.cuda.nccl.groupStart()
         self.comm.recv(
             tensor.data_ptr(),
             torch.numel(tensor),
@@ -73,6 +76,7 @@ class NCCLCommunicator:
             src,
             stream.ptr
         )
+        cupy.cuda.nccl.groupEnd()
 
     def broadcast(self,
                   tensor: torch.Tensor,
