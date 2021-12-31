@@ -26,23 +26,24 @@
      
       python3 pytorch_send_recv_test.py --dist-url tcp://XXX.XXX.XXX.XXX:9000 --world-size 2 --rank 0/1
 
-## Results (AWS p3.2xlarge):
-### Default network (AWS spec: up to 10 Gbps):
-- PyTorch-gloo backend delay: 0.1 ms; bandwidth: 4.5 Gbps
-- PyTorch-nccl backend delay: 0.05 ms; bandwidth: 8.9 Gbps
+## Results 
 
-### Use tc netem to setup delay to 1 ms:
-- PyTorch-gloo backend delay: 1.2 ms; bandwidth: 4.5 Gbps
-- PyTorch-nccl backend delay: <span style="color:red">0.05 ms </span>; bandwidth: 8.9 Gbps
+- A cluster of 2 AWS p3.2xlarge instances;
+- The results are from the recv side (TC can only control recv side.)
+- The data size is determined by the bytes of a practical macro-batch (for GPT-3 XL).
+  - macro-batch size: 4, 8;
+  - sequence length: 2048;
+  - model size: 2048.
 
-### Use tc netem to setup delay to 10 ms:
-- PyTorch-gloo backend delay: 10.2 ms; bandwidth: <span style="color:red">1.05 Gbps </span>
-- PyTorch-nccl backend delay: <span style="color:red">0.05 ms </span>; bandwidth: <span style="color:red"> 6.5 Gbps </span>
-
-### Use tc netem to setup bandwidth to 1 Gbps:
-- PyTorch-gloo backend delay: 0.15 ms; bandwidth: 0.93 Gbps
-- PyTorch-nccl backend delay: 0.08 ms; bandwidth: 0.93 Gbps
-
-### Use tc tbf to setup bandwidth to 1 Gbps:
-- PyTorch-gloo backend delay: 0.1 ms; bandwidth: <span style="color:red">4.5</span> Gbps
-- PyTorch-nccl backend delay: 0.05 ms; bandwidth: <span style="color:red">8.9</span> Gbps
+| Network setting              | Gloo-64 MB | NCCL-64 MB | Gloo-128 MB | NCCL-128 MB |
+|------------------------------|------------|------------|-------------|-------------|
+| default (0.1ms delay 10Gbps) |            |            |             |             |
+| delay 1ms                    |            |            |             |             |
+| delay 5ms                    |            |            |             |             |
+| delay 10ms                   |            |            |             |             |
+| bandwidth 5Gbps              |            |            |             |             |
+| bandwidth 2Gbps              |            |            |             |             |
+| bandwidth 1Gbps              |            |            |             |             |
+| delay 1ms  bandwidth 5Gbps   |            |            |             |             |
+| delay 5ms  bandwidth 2Gbps   |            |            |             |             |
+| delay 10ms  bandwidth 1Gbps  |            |            |             |             |

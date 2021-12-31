@@ -107,7 +107,7 @@ def main():
                         help='world size (default: 2)')
     parser.add_argument('--rank', type=int, default=0, metavar='R',
                         help='rank for distributed PyTorch')
-    parser.add_argument('--dim', type=int, default=4*2048*1024, metavar='R',
+    parser.add_argument('--dim', type=int, default=4*2048*2048, metavar='R',
                         help='size of the tensor to be sent.') # this is an approximated size of a macro-bench
     parser.add_argument('--use-cuda', default=False, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
@@ -150,9 +150,9 @@ def main():
             e2e_time += current_time
         time.sleep(1)
     estimated_bandwidth /= args.iter
-    current_time /= args.iter
+    e2e_time /= args.iter
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
-    print("<=====Averaged end to end time: ", current_time, "s for sending <", 4 * args.dim / 1024/1024,
+    print("<=====Averaged end to end time: ", e2e_time, "s for sending <", 4 * args.dim / 1024/1024,
           "> MB data=====>")
 
 
