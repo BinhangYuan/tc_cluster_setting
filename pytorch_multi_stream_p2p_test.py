@@ -42,14 +42,14 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
                     cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
                     communicator.recv(recv_tensor, src=0, stream=cupy_even_stream)
                     print("====In even stream====")
-                    print("Iter {} recv tensor: {} ".format(i, recv_tensor[0]))
+                    print("Iter {} recv tensor: {} ".format(i, recv_tensor))
             else:
                 with torch.cuda.stream(torch_odd_stream):
                     recv_tensor = torch.zeros((args.dim,), dtype=torch.int, device=device)
                     cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
                     communicator.recv(recv_tensor, src=0, stream=cupy_odd_stream)
                     print("----In odd stream----")
-                    print("Iter {} recv tensor: {} ".format(i, recv_tensor[0]))
+                    print("Iter {} recv tensor: {} ".format(i, recv_tensor))
 
 
 def main():
@@ -62,7 +62,7 @@ def main():
                         help='world size (default: 2)')
     parser.add_argument('--rank', type=int, default=0, metavar='R',
                         help='rank for distributed PyTorch')
-    parser.add_argument('--dim', type=int, default=4*2048*2048, metavar='R',
+    parser.add_argument('--dim', type=int, default=32, metavar='R',
                         help='size of the tensor to be sent.') # this is an approximated size of a macro-bench
     parser.add_argument('--use-cuda', default=False, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
