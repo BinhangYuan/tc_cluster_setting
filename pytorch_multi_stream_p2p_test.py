@@ -23,7 +23,7 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
                     torch_odd_stream.wait_event(start_send_events[i])
                     communicator.send(send_tensors[i], dst=1, stream=cupy_odd_stream)
         print("All send cmd issued.")
-        time.sleep(3)
+        time.sleep(10)
         for i in range(args.iter//2):
             rand_val = random.randint(0, 1)
             if rand_val == 0:
