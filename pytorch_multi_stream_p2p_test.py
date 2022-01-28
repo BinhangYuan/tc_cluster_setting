@@ -1,9 +1,13 @@
 import random
 import argparse
+
+import torch.cuda
+
 from nccl_backend import *
 
 
 def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
+    torch_comp_stream = torch.cuda.default_stream(device=device)
     torch_odd_stream = torch.cuda.Stream(device=device, priority=-1)
     torch_even_stream = torch.cuda.Stream(device=device, priority=-1)
     if args.rank == 0:
@@ -12,18 +16,18 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
         for i in range(args.iter//2):
             rand_val = random.randint(0, 1)
             if rand_val == 0:  # insert delay at even event
-                with torch.cuda.default_stream():
-                    torch.cuda.default_stream().record_event(start_send_events[i * 2 + 1])
+                with torch.cuda.stream(torch_comp_stream):
+                    torch_comp_stream.record_event(start_send_events[i * 2 + 1])
                     print("Record event: {}".format(i * 2 + 1))
                     send_tensors[i * 2] = torch.matmul(send_tensors[i * 2], torch.eye(args.dim, device=device))
-                    torch.cuda.default_stream().record_event(start_send_events[i * 2])
+                    torch_comp_stream.record_event(start_send_events[i * 2])
                     print("Record event: {} insert delay.".format(i * 2))
             else:
-                with torch.cuda.default_stream():
-                    torch.cuda.default_stream().record_event(start_send_events[i * 2])
+                with torch.cuda.stream(torch_comp_stream):
+                    torch_comp_stream.record_event(start_send_events[i * 2])
                     print("Record event: {}".format(i * 2))
                     send_tensors[i * 2 + 1] = torch.matmul(send_tensors[i * 2], torch.eye(args.dim, device=device))
-                    torch.cuda.default_stream().record_event(start_send_events[i * 2 + 1])
+                    torch_comp_stream.record_event(start_send_events[i * 2 + 1])
                     print("Record event: {} insert delay.".format(i * 2 + 1))
         for i in range(args.iter):
             if i % 2 == 0:
