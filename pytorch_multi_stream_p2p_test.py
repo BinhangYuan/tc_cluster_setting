@@ -13,22 +13,23 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
     if args.rank == 0:
         start_send_events = [torch.cuda.Event(blocking=False) for _ in range(args.iter)]
         send_tensors = [torch.full((args.dim, args.dim), i, dtype=torch.float, device=device) for i in range(args.iter)]
-        for i in range(args.iter//2):
-            rand_val = random.randint(0, 1)
-            if rand_val == 0:  # insert delay at even event
-                with torch.cuda.stream(torch_comp_stream):
-                    torch_comp_stream.record_event(start_send_events[i * 2 + 1])
-                    print("Record event: {}".format(i * 2 + 1))
-                    send_tensors[i * 2] = torch.matmul(send_tensors[i * 2], torch.eye(args.dim, device=device))
-                    torch_comp_stream.record_event(start_send_events[i * 2])
-                    print("Record event: {} insert delay.".format(i * 2))
-            else:
-                with torch.cuda.stream(torch_comp_stream):
-                    torch_comp_stream.record_event(start_send_events[i * 2])
-                    print("Record event: {}".format(i * 2))
-                    send_tensors[i * 2 + 1] = torch.matmul(send_tensors[i * 2], torch.eye(args.dim, device=device))
-                    torch_comp_stream.record_event(start_send_events[i * 2 + 1])
-                    print("Record event: {} insert delay.".format(i * 2 + 1))
+        if args.perturb:
+            for i in range(args.iter//2):
+                rand_val = random.randint(0, 1)
+                if rand_val == 0:  # insert delay at even event
+                    with torch.cuda.stream(torch_comp_stream):
+                        torch_comp_stream.record_event(start_send_events[i * 2 + 1])
+                        print("Record event: {}".format(i * 2 + 1))
+                        send_tensors[i * 2] = torch.matmul(send_tensors[i * 2], torch.eye(args.dim, device=device))
+                        torch_comp_stream.record_event(start_send_events[i * 2])
+                        print("Record event: {} insert delay.".format(i * 2))
+                else:
+                    with torch.cuda.stream(torch_comp_stream):
+                        torch_comp_stream.record_event(start_send_events[i * 2])
+                        print("Record event: {}".format(i * 2))
+                        send_tensors[i * 2 + 1] = torch.matmul(send_tensors[i * 2 + 1], torch.eye(args.dim, device=device))
+                        torch_comp_stream.record_event(start_send_events[i * 2 + 1])
+                        print("Record event: {} insert delay.".format(i * 2 + 1))
         for i in range(args.iter):
             if i % 2 == 0:
                 with torch.cuda.stream(torch_even_stream):
@@ -86,6 +87,8 @@ def main():
                         help='rank for distributed PyTorch')
     parser.add_argument('--dim', type=int, default=1000, metavar='R',
                         help='size of the tensor to be sent.') # this is an approximated size of a macro-bench
+    parser.add_argument('--perturb', default=True, type=lambda x: (str(x).lower() == 'true'),
+                        help='if this is set to True, will insert some perturb compute ops.')
     parser.add_argument('--use-cuda', default=False, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
