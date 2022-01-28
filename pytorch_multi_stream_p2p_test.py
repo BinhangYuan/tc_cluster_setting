@@ -14,12 +14,12 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
             send_tensor = torch.full((args.dim,), i, dtype=torch.int, device=device)
             if i % 2 == 0:
                 with torch.cuda.stream(torch_even_stream):
-                    cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream)
+                    cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
                     torch_even_stream.wait_event(start_send_events[i])
                     communicator.send(send_tensor, dst=1, stream=cupy_even_stream)
             else:
                 with torch.cuda.stream(torch_odd_stream):
-                    cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream)
+                    cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
                     torch_odd_stream.wait_event(start_send_events[i])
                     communicator.send(send_tensor, dst=1, stream=cupy_odd_stream)
         for i in range(args.iter//2):
@@ -39,14 +39,14 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
             if i % 2 == 0:
                 with torch.cuda.stream(torch_even_stream):
                     recv_tensor = torch.zeros((args.dim,), dtype=torch.int, device=device)
-                    cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream)
+                    cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
                     communicator.recv(recv_tensor, src=0, stream=cupy_even_stream)
                     print("====In even stream====")
                     print("Iter {} recv tensor: {} ".format(i, recv_tensor[0]))
             else:
                 with torch.cuda.stream(torch_odd_stream):
                     recv_tensor = torch.zeros((args.dim,), dtype=torch.int, device=device)
-                    cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream)
+                    cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
                     communicator.recv(recv_tensor, src=0, stream=cupy_odd_stream)
                     print("----In odd stream----")
                     print("Iter {} recv tensor: {} ".format(i, recv_tensor[0]))
