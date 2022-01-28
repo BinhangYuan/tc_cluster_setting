@@ -10,18 +10,18 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
     torch_even_stream = torch.cuda.Stream(device=device, priority=-1)
     if args.rank == 0:
         start_send_events = [torch.cuda.Event(blocking=False) for _ in range(args.iter)]
+        send_tensors = [torch.full((args.dim,), i, dtype=torch.int, device=device) for i in range(args.iter)]
         for i in range(args.iter):
-            send_tensor = torch.full((args.dim,), i, dtype=torch.int, device=device)
             if i % 2 == 0:
                 with torch.cuda.stream(torch_even_stream):
                     cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
                     torch_even_stream.wait_event(start_send_events[i])
-                    communicator.send(send_tensor, dst=1, stream=cupy_even_stream)
+                    communicator.send(send_tensors[i], dst=1, stream=cupy_even_stream)
             else:
                 with torch.cuda.stream(torch_odd_stream):
                     cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
                     torch_odd_stream.wait_event(start_send_events[i])
-                    communicator.send(send_tensor, dst=1, stream=cupy_odd_stream)
+                    communicator.send(send_tensors[i], dst=1, stream=cupy_odd_stream)
         for i in range(args.iter//2):
             rand_val = random.randint(0, 1)
             if rand_val == 0:
