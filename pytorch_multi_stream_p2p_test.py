@@ -13,8 +13,8 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
     if args.rank == 0:
         start_send_events = [torch.cuda.Event(blocking=False) for _ in range(args.iter)]
         send_tensors = [torch.full((args.dim, args.dim), i, dtype=torch.float, device=device) for i in range(args.iter)]
-        if args.perturb:
-            for i in range(args.iter//2):
+        for i in range(args.iter // 2):
+            if args.perturb:
                 rand_val = random.randint(0, 1)
                 if rand_val == 0:  # insert delay at even event
                     with torch.cuda.stream(torch_comp_stream):
@@ -30,17 +30,14 @@ def test_multi_stream_send_recv(args, device, communicator:NCCLCommunicator):
                         send_tensors[i * 2 + 1] = torch.matmul(send_tensors[i * 2 + 1], torch.eye(args.dim, device=device))
                         torch_comp_stream.record_event(start_send_events[i * 2 + 1])
                         print("Record event: {} insert delay.".format(i * 2 + 1))
-        for i in range(args.iter):
-            if i % 2 == 0:
-                with torch.cuda.stream(torch_even_stream):
-                    cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
-                    torch_even_stream.wait_event(start_send_events[i])
-                    communicator.send(send_tensors[i], dst=1, stream=cupy_even_stream)
-            else:
-                with torch.cuda.stream(torch_odd_stream):
-                    cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
-                    torch_odd_stream.wait_event(start_send_events[i])
-                    communicator.send(send_tensors[i], dst=1, stream=cupy_odd_stream)
+            with torch.cuda.stream(torch_even_stream):
+                cupy_even_stream = cupy.cuda.ExternalStream(torch_even_stream.cuda_stream)
+                torch_even_stream.wait_event(start_send_events[i * 2])
+                communicator.send(send_tensors[i * 2], dst=1, stream=cupy_even_stream)
+            with torch.cuda.stream(torch_odd_stream):
+                cupy_odd_stream = cupy.cuda.ExternalStream(torch_odd_stream.cuda_stream)
+                torch_odd_stream.wait_event(start_send_events[i * 2 + 1])
+                communicator.send(send_tensors[i * 2 + 1], dst=1, stream=cupy_odd_stream)
         '''
         print("All send cmd issued.")
         time.sleep(10)
@@ -103,6 +100,7 @@ def main():
     assert (args.dist_backend == 'cupy_nccl')
     communicator = NCCLCommunicator(rank=args.rank, intra_gpu_rank=args.cuda_id,
                                     world_size=args.world_size, master_ip=args.dist_url)
+    assert(args.iter % 2 == 0)
     test_multi_stream_send_recv(args, device, communicator)
 
 
