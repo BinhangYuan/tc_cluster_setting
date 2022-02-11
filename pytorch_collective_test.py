@@ -114,7 +114,6 @@ def main():
             allreduce_time += test_allreduce(args, device, communicator)
         time.sleep(1)
     allreduce_time /= args.iter
-    print("<=====Averaged AllReduce time: ", allreduce_time * 1000, "ms.=====>")
 
     broadcast_time = 0
     for i in range(args.iter + 1):
@@ -125,7 +124,6 @@ def main():
             broadcast_time += test_broadcast(args, device, communicator)
         time.sleep(1)
     broadcast_time /= args.iter
-    print("<=====Averaged Broadcast time: ", broadcast_time * 1000, "ms.=====>")
 
     reduce_time = 0
     for i in range(args.iter + 1):
@@ -136,7 +134,10 @@ def main():
             reduce_time += test_reduce(args, device, communicator)
         time.sleep(1)
     reduce_time /= args.iter
-    print("<=====Averaged AllReduce time: ", reduce_time * 1000, "ms.=====>")
+
+    print("<=====Averaged AllReduce time: ", allreduce_time * 1000, "ms.=====>")
+    print("<=====Averaged Broadcast time: ", broadcast_time * 1000, "ms.=====>")
+    print("<=====Averaged Reduce time: ", reduce_time * 1000, "ms.=====>")
 
 
 if __name__ == '__main__':
