@@ -2,16 +2,10 @@
 
 ## Setup:
 
-- Use AWS Deep Learning Base AMI, and install PyTorch:
+- Use my AWS GPT@Home-Dev AMI
 
-       pip3 install torch==1.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
-       pip3 install cupy-cuda110==8.6.0
 
-- Clone this repository:
-       
-      git clone https://github.com/BinhangYuan/tc_cluster_setting.git
-
-- Set the github cache (Optional) 
+- Set the GitHub cache (Optional) 
 
       git config credential.helper 'cache --timeout=30000'
 
