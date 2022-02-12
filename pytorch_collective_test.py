@@ -14,6 +14,8 @@ def collect_run_time(args, device, communicator: NCCLCommunicator, local_run_tim
     run_time = torch.tensor(data=local_run_time, dtype=torch.float32, device=device)
     if args.rank == 0:
         run_times = [torch.zeros(1, dtype=torch.float32, device=device) for _ in range(args.world_size)]
+        print(run_time)
+        print(run_times)
     else:
         run_times = None
     communicator.gather(run_time, run_times, dst=0)
