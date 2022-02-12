@@ -1,4 +1,3 @@
-import random
 import torch
 import argparse
 import time
@@ -10,14 +9,14 @@ def data_size_mb2dim(mb:int):
     return mb // 4 * 1024 * 1024
 
 
-def collect_run_time(args, device, communicator: NCCLCommunicator, local_run_time: float):
-    run_time = torch.zeros(1, dtype=torch.float32, device=device)
+def collect_run_time(args, local_run_time: float):
+    run_time = torch.zeros(1, dtype=torch.float32, device='cpu')
     run_time[0] = local_run_time
     if args.rank == 0:
-        run_times = [torch.zeros(1, dtype=torch.float32, device=device) for _ in range(args.world_size)]
+        run_times = [torch.zeros(1, dtype=torch.float32, device='cpu') for _ in range(args.world_size)]
     else:
         run_times = None
-    communicator.gather(run_time, run_times, dst=0)
+    dist.gather(run_time, run_times, dst=0)
     if args.rank == 0:
         return torch.max(torch.cat(run_times)).item()
     else:
@@ -153,9 +152,9 @@ def main():
     print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
     print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
 
-    max_allreduce_time = collect_run_time(args, device, communicator, allreduce_time)
-    max_broadcast_time = collect_run_time(args, device, communicator, broadcast_time)
-    max_reduce_time = collect_run_time(args, device, communicator, reduce_time)
+    max_allreduce_time = collect_run_time(args, allreduce_time)
+    max_broadcast_time = collect_run_time(args, broadcast_time)
+    max_reduce_time = collect_run_time(args, reduce_time)
 
     if args.rank == 0:
         print("Backend: ", args.dist_backend)
