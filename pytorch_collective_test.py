@@ -19,7 +19,7 @@ def collect_run_time(args, device, communicator: NCCLCommunicator, local_run_tim
         run_times = None
     communicator.gather(run_time, run_times, dst=0)
     if args.rank == 0:
-        return torch.max(run_times).item()
+        return torch.max(torch.cat(run_times)).item()
     else:
         return None
 
