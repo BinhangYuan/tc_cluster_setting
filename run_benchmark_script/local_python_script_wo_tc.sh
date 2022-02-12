@@ -1,6 +1,9 @@
 cd ~/tc_cluster_setting
 source activate pytorch_p38
 
+export NCCL_SOCKET_IFNAME=ens3
+export GLOO_SOCKET_IFNAME=ens3
+
 WORLD_SIZE=$1
 RANK=$2
 
