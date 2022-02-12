@@ -11,12 +11,12 @@ def data_size_mb2dim(mb:int):
 
 
 def collect_run_time(args, device, communicator: NCCLCommunicator, local_run_time: float):
-    local_run_time = torch.tensor(local_run_time)
+    run_time = torch.tensor(data=local_run_time, dtype=torch.float32, device=device)
     if args.rank == 0:
         run_times = [torch.zeros(1, dtype=torch.float32, device=device) for _ in range(args.world_size)]
     else:
         run_times = None
-    communicator.gather(local_run_time, run_times, dst=0)
+    communicator.gather(run_time, run_times, dst=0)
     if args.rank == 0:
         return torch.max(run_times).item()
     else:
@@ -155,6 +155,7 @@ def main():
     max_allreduce_time = collect_run_time(args, device, communicator, allreduce_time)
     max_broadcast_time = collect_run_time(args, device, communicator, broadcast_time)
     max_reduce_time = collect_run_time(args, device, communicator, reduce_time)
+
     if args.rank == 0:
         print("Backend: ", args.dist_backend)
         print("<=====Averaged global AllReduce time: ", max_allreduce_time * 1000, "ms.=====>")
