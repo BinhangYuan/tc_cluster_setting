@@ -10,6 +10,19 @@ def data_size_mb2dim(mb:int):
     return mb // 4 * 1024 * 1024
 
 
+def collect_run_time(args, device, communicator: NCCLCommunicator, local_run_time: float):
+    local_run_time = torch.tensor(local_run_time)
+    if args.rank == 0:
+        run_times = [torch.zeros(1, dtype=torch.float32, device=device) for _ in range(args.world_size)]
+    else:
+        run_times = None
+    communicator.gather(local_run_time, run_times, dst=0)
+    if args.rank == 0:
+        return torch.max(run_times).item()
+    else:
+        return None
+
+
 def test_allreduce(args, device, communicator:NCCLCommunicator):
     print("<==== Test AllReduce ====>")
     dim = data_size_mb2dim(args.dim_mb)
@@ -135,9 +148,18 @@ def main():
         time.sleep(1)
     reduce_time /= args.iter
 
-    print("<=====Averaged AllReduce time: ", allreduce_time * 1000, "ms.=====>")
-    print("<=====Averaged Broadcast time: ", broadcast_time * 1000, "ms.=====>")
-    print("<=====Averaged Reduce time: ", reduce_time * 1000, "ms.=====>")
+    print("<=====Averaged local AllReduce time: ", allreduce_time * 1000, "ms.=====>")
+    print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
+    print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
+
+    max_allreduce_time = collect_run_time(args, device, communicator, allreduce_time)
+    max_broadcast_time = collect_run_time(args, device, communicator, broadcast_time)
+    max_reduce_time = collect_run_time(args, device, communicator, reduce_time)
+    if args.rank == 0:
+        print("Backend: ", args.dist_backend)
+        print("<=====Averaged global AllReduce time: ", max_allreduce_time * 1000, "ms.=====>")
+        print("<=====Averaged global Broadcast time: ", max_broadcast_time * 1000, "ms.=====>")
+        print("<=====Averaged global Reduce time: ", max_reduce_time * 1000, "ms.=====>")
 
 
 if __name__ == '__main__':
