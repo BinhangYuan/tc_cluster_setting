@@ -27,8 +27,8 @@
 
 #### 32 node:
 | Network setting             | Gloo-128 MB | NCCL-128 MB | Gloo-256 MB | NCCL-256 MB |
-|-----------------------------|-------------|-------------|-----|-----|
-| AWS default                 | ms          | ms          |  ms |  ms |
-| delay 1ms  bandwidth 5Gbps  | ms          | ms          |  ms |  ms |
-| delay 5ms  bandwidth 2Gbps  | ms          | ms          |  ms |  ms |
-| delay 10ms  bandwidth 1Gbps | ms          | ms          |  ms |  ms |
+|-----------------------------|-------------|-------------|-------------|-------------|
+| AWS default                 | 327 ms      | 173 ms      | 659 ms      | 300 ms      |
+| delay 1ms  bandwidth 5Gbps  | 425 ms      | 316 ms      | 872 ms      | 601 ms      |
+| delay 5ms  bandwidth 2Gbps  | 1196 ms     | 905 ms      | 2338 ms     | 1397 ms     |
+| delay 10ms  bandwidth 1Gbps | 2318 ms     | 1709 ms     | 4448 ms     | 2815 ms     |
