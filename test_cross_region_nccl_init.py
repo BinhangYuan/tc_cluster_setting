@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser(description='Test Cross region NCCL init')
     parser.add_argument('--rank', type=int, default=0, metavar='R',
                         help='rank for distributed PyTorch')
-    parser.add_argument('--cuda-id-str', type=bytes, default='?', metavar='S',
+    parser.add_argument('--cuda-id-str', type=bytes, default=b'\x00', metavar='S',
                         help='Magic cuda-id-string')
     args = parser.parse_args()
 
