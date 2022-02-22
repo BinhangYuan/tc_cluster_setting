@@ -20,7 +20,8 @@ def main():
         nccl_comm = cupy.cuda.nccl.NcclCommunicator(2, comm_id, 0)
         print("Initialize NCCL succeed! - Rank 0")
     elif args.rank == 1:
-        comm_id = args.cuda_id
+        # comm_id = args.cuda_id
+        comm_id = (2, 0, -30, -83, -84, 31, 37, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
         nccl_comm = cupy.cuda.nccl.NcclCommunicator(2, comm_id, 1)
         print("Initialize NCCL succeed! - Rank 1")
 
