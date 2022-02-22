@@ -126,16 +126,20 @@ class NCCLCommunicator:
         cupy.cuda.nccl.groupStart()
         if self.rank == src:
             for i in range(self.world_size):
-                self.send(
-                    scatter_list[i],
-                    i,
-                    stream
-                )
-        self.recv(
-            tensor,
-            src,
-            stream
-        )
+                if i != src:
+                    self.send(
+                        scatter_list[i],
+                        i,
+                        stream
+                    )
+                else:
+                    tensor.copy_(scatter_list[i])
+        else:
+            self.recv(
+                tensor,
+                src,
+                stream
+            )
         cupy.cuda.nccl.groupEnd()
 
     def gather(self,
@@ -146,14 +150,18 @@ class NCCLCommunicator:
         cupy.cuda.nccl.groupStart()
         if self.rank == dst:
             for i in range(self.world_size):
-                self.recv(
-                    gather_list[i],
-                    i,
-                    stream
-                )
-        self.send(
-            tensor,
-            dst,
-            stream
-        )
+                if i != dst:
+                    self.recv(
+                        gather_list[i],
+                        i,
+                        stream
+                    )
+                else:
+                    gather_list[i].copy_(tensor)
+        else:
+            self.send(
+                tensor,
+                dst,
+                stream
+            )
         cupy.cuda.nccl.groupEnd()
