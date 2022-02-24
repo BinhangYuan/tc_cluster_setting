@@ -19,6 +19,7 @@ def main():
         comm_id = cupy.cuda.nccl.get_unique_id()
         print(comm_id)
         comm_id_str = np.array(comm_id).tobytes()
+        print("Rank 0 generate comm_id:", comm_id_str)
         store.set('comm_id', comm_id_str)
         nccl_comm = cupy.cuda.nccl.NcclCommunicator(2, comm_id, 0)
         print("Initialize NCCL succeed! - Rank 0")
