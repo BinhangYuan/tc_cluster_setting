@@ -14,7 +14,7 @@ def main():
 
     store = dist.TCPStore(args.ip, 1234, 2, args.rank == 0, timedelta(seconds=60))
     print("TCP store initialized.")
-    dist.init_process_group(store=store, rank=args.rank, world_size=2)
+    dist.init_process_group(backend='gloo', store=store, rank=args.rank, world_size=2)
     print("Process group initialized.")
 
     tensor = torch.ones(1024, dtype=torch.float32, device='cpu')
