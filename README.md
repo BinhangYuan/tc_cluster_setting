@@ -9,10 +9,15 @@
 
       git config credential.helper 'cache --timeout=30000'
 
-- Set network interface:
+- Set network interface (updated below):
 
       export NCCL_SOCKET_IFNAME=ens3
       export GLOO_SOCKET_IFNAME=ens3
+
+- Set NCCL FLAGs:
+
+      export NCCL_DEBUG=INFO
+      export NCCL_COMM_ID=XX.XX.XX.XX:30000
 
 ## Benchmark:
 
