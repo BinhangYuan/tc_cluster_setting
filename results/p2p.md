@@ -22,20 +22,25 @@
 ### Real cross region 
 
 - 12 regions:
-  - us-west-1 (California) 
   - us-west-2 (Oregon)
   - us-east-1 (Virginia) 
   - us-east-2 (Ohio) 
   - ap-northeast-1 (Tokyo)
   - ap-southeast-1 (Singapore)
   - ap-southeast-2 (Sydney)
-  - ap-south-1 (Mumbai)
-  - ca-central-1 (Canada)
+  - ca-central-1 (Central)
   - eu-central-1 (Frankfurt)
   - eu-west-1 (Ireland)
-  - eu-west-2 (London)
 
-| Region 1               | Region 2           | NCCL-64 MB | NCCL-128 MB |
-|------------------------|--------------------|------------|-------------|
-| us-west-1 (California) | us-west-2 (Oregon) |            |             |
+
+| Region 1           | Region 2                   | NCCL-64 MB | NCCL-128 MB |
+|--------------------|----------------------------|------------|-------------|
+| us-west-2 (Oregon) | us-east-1 (Virginia)       |            |             |
+| us-west-2 (Oregon) | us-east-1 (Ohio)           |            |             |
+| us-west-2 (Oregon) | ap-northeast-1 (Tokyo)     |            |             |
+| us-west-2 (Oregon) | ap-southeast-1 (Singapore) |            |             |
+| us-west-2 (Oregon) | ap-southeast-2 (Sydney)    |            |             |
+| us-west-2 (Oregon) | ca-central-1 (Central)     |            |             |
+| us-west-2 (Oregon) | eu-central-1 (Frankfurt)   |            |             |
+| us-west-2 (Oregon) | eu-west-1 (Ireland)        |            |             |
 

@@ -99,7 +99,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
 
 def main():
     parser = argparse.ArgumentParser(description='Test PyTorch Distributed')
-    parser.add_argument('--dist-backend', type=str, default='gloo', metavar='S',
+    parser.add_argument('--dist-backend', type=str, default='cupy_nccl', metavar='S',
                         help='PyTorch backend type')
     parser.add_argument('--dist-url', type=str, default='tcp://127.0.0.1:9000', metavar='S',
                         help='master ip for distributed PyTorch')
@@ -109,11 +109,11 @@ def main():
                         help='rank for distributed PyTorch')
     parser.add_argument('--dim', type=int, default=4*2048*2048, metavar='R',
                         help='size of the tensor to be sent.') # this is an approximated size of a macro-bench
-    parser.add_argument('--use-cuda', default=False, type=lambda x: (str(x).lower() == 'true'),
+    parser.add_argument('--use-cuda', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
                         help='cuda index, if the instance has multiple GPUs.')
-    parser.add_argument('--iter', type=int, default=10, metavar='R',
+    parser.add_argument('--iter', type=int, default=5, metavar='R',
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
 
