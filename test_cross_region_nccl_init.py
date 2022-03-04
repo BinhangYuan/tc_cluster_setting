@@ -34,7 +34,7 @@ def main():
 
     tensor = torch.ones(1024, dtype=torch.float32, device='cuda:0')
     nccl_comm.allReduce(tensor.data_ptr(), tensor.data_ptr(), torch.numel(tensor), cupy.cuda.nccl.NCCL_FLOAT32,
-                        cupy.cuda.nccl.NCCL_SUM, cupy.cuda.Stream.null)
+                        cupy.cuda.nccl.NCCL_SUM, cupy.cuda.Stream.null.ptr)
     print(tensor)
 
 
