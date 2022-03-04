@@ -131,6 +131,7 @@ def main():
         communicator = dist
 
     estimated_delay = 0
+    '''
     for i in range(args.iter + 1):
         if i == 0:
             test_sync_send_recv_delay(args, device, communicator)
@@ -139,6 +140,7 @@ def main():
         time.sleep(1)
     estimated_delay /= args.iter
     print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
+    '''
     estimated_bandwidth = 0
     e2e_time = 0
     for i in range(args.iter + 1):
