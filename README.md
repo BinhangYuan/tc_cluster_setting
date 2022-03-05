@@ -19,14 +19,16 @@
 
       export NCCL_SOCKET_IFNAME=ens3
       export GLOO_SOCKET_IFNAME=ens3
-      export NCCL_SOCKET_IFNAME=tun0
-      export GLOO_SOCKET_IFNAME=tun0
+      export NCCL_SOCKET_IFNAME=wg0
+      export GLOO_SOCKET_IFNAME=wg0
 
 
 - Set NCCL FLAGs:
-
+      export NCCL_SOCKET_NTHREADS=1
+      export NCCL_NSOCKS_PERTHREAD=8
       export NCCL_DEBUG=INFO
       export NCCL_COMM_ID=XX.XX.XX.XX:30000
+- 
 
 ## Benchmark:
 

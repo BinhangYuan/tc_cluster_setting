@@ -33,14 +33,15 @@
   - eu-west-1 (Ireland)
 
 
-| Region 1           | Region 2                   | NCCL-64 MB | NCCL-128 MB |
-|--------------------|----------------------------|------------|-------------|
-| us-west-2 (Oregon) | us-east-1 (Virginia)       |            |             |
-| us-west-2 (Oregon) | us-east-1 (Ohio)           |            |             |
-| us-west-2 (Oregon) | ap-northeast-1 (Tokyo)     |            |             |
-| us-west-2 (Oregon) | ap-southeast-1 (Singapore) |            |             |
-| us-west-2 (Oregon) | ap-southeast-2 (Sydney)    |            |             |
-| us-west-2 (Oregon) | ca-central-1 (Central)     |            |             |
-| us-west-2 (Oregon) | eu-central-1 (Frankfurt)   |            |             |
-| us-west-2 (Oregon) | eu-west-1 (Ireland)        |            |             |
+| Region 1           | Region 2                   | NCCL-64 MB | NCCL Bandwidth | Iperf3 Bandwidth |
+|--------------------|----------------------------|------------|----------------|------------------|
+| us-west-2 (Oregon) | us-east-1 (Virginia)       |            |                |                  |
+| us-west-2 (Oregon) | us-east-1 (Ohio)           | 1335 ms    | 374 Mbit/sec   | 477 Mbit/sec     |
+| us-west-2 (Oregon) | ap-northeast-1 (Tokyo)     | 986 ms     | 522 Mbit/sec   | 575 Mbit/sec     | 
+| us-west-2 (Oregon) | ap-southeast-1 (Singapore) |            |                |                  |
+| us-west-2 (Oregon) | ap-southeast-2 (Sydney)    |            |                |                  |
+| us-west-2 (Oregon) | ca-central-1 (Central)     |            |                |                  |
+| us-west-2 (Oregon) | eu-central-1 (Frankfurt)   |            |                |                  |
+| us-west-2 (Oregon) | eu-west-1 (Ireland)        |            |                |                  |
+| us-west-2 (Ohio)   | us-east-1 (Tokyo)          | 1297 ms    | 398 Mbit/sec   | 492 Mbit/sec     |
 
