@@ -24,6 +24,7 @@
 
 
 - Set NCCL FLAGs:
+
       export NCCL_SOCKET_NTHREADS=1
       export NCCL_NSOCKS_PERTHREAD=8
       export NCCL_DEBUG=INFO
@@ -33,8 +34,6 @@
 ## Benchmark:
 
 - Run this for benchmark:
-     
-      python3 pytorch_send_recv_test.py --dist-url tcp://XXX.XXX.XXX.XXX:9000 --world-size 2 --rank 0/1
 
       python pytorch_send_recv_test.py --iter 5 --dist-url tcp://10.8.0.1:9000 --world-size 2 --dist-backend cupy_nccl --use-cuda True --rank 0/1
 
