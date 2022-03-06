@@ -4,7 +4,8 @@ declare -A ip_region_dict
 declare -A ip_priviate_dict
 ip_region_dict['52.40.103.92']='oregon'
 ip_priviate_dict['52.40.103.92']='172.31.47.46'
-#ip_region_dict['44.200.95.108']='virginia'
+ip_region_dict['3.238.244.164']='virginia'
+ip_priviate_dict['3.238.244.164']='172.31.81.36'
 ip_region_dict['18.218.126.1']='ohio'
 ip_priviate_dict["18.218.126.1"]='172.31.30.93'
 #ip_region_dict['54.199.156.57']='tokyo'
