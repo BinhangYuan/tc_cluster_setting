@@ -15,6 +15,39 @@
       git clone https://github.com/BinhangYuan/tc_cluster_setting.git
       git config credential.helper 'cache --timeout=30000'
 
+- Set wireguard VPN:
+
+  - Install wireguard if necessary:
+      
+        sudo apt install wireguard
+
+  - Generate public/private key (in root mode of each instance):
+        
+        wg genkey | tee private.key | wg pubkey > public.key
+  
+  - Sync up the configuration (in run_vpn_benchmark_script), update ip in ip_dict.sh/generate_wireguard_conf.py first: 
+        
+        bash wg_download_keys.sh
+        python generate_wireguard_conf
+        bash wg_upload_conf.sh
+  
+  - Start vpn (in root mode of each instance)
+
+        bash wg_start_vpn.sh
+
+- Set up swan ipsec VPN
+  - Install strongswan if necessary:
+      
+        sudo apt install strongswan
+  - Sync secret/conf file, update ip in generate_swan_ipsec_secrets_conf.py
+        
+        python generate_swan_ipsec_secrets_conf.py
+        bash swan_upload_conf.sh
+  
+  - Start vpn (in root mode of each instance)
+        
+         bash swan_start_vpn.sh
+
 - Set network interface (updated below):
 
       export NCCL_SOCKET_IFNAME=ens3
