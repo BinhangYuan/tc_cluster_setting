@@ -3,6 +3,8 @@
 ## Setup:
 
 - If use my AWS GPT@Home-Dev AMI, no further setup; 
+      
+     source activate pytorch_p38
 
 - If use AWS deep learning base AMI:
 
@@ -15,7 +17,7 @@
       git clone https://github.com/BinhangYuan/tc_cluster_setting.git
       git config credential.helper 'cache --timeout=30000'
 
-- Set wireguard VPN:
+- <del>Set wireguard VPN (deprecated, use Swan VPN instead):
 
   - Install wireguard if necessary:
       
@@ -25,7 +27,7 @@
         
         wg genkey | tee private.key | wg pubkey > public.key
   
-  - Sync up the configuration (in run_vpn_benchmark_script), update ip in ip_dict.sh/generate_wireguard_conf.py first: 
+  - Sync up the configuration (in run_vpn_benchmark_script), update ip in ip_dict.sh/generate_wireguard_p2p_conf.py first: 
         
         bash wg_download_keys.sh
         python generate_wireguard_conf
@@ -52,17 +54,20 @@
 
       export NCCL_SOCKET_IFNAME=ens3
       export GLOO_SOCKET_IFNAME=ens3
-      export NCCL_SOCKET_IFNAME=wg0
-      export GLOO_SOCKET_IFNAME=wg0
+  or    
+
+<del>export NCCL_SOCKET_IFNAME=wg0<del> 
+
+<del>export GLOO_SOCKET_IFNAME=wg0<del>
 
 
 - Set NCCL FLAGs:
 
       export NCCL_SOCKET_NTHREADS=1
-      export NCCL_NSOCKS_PERTHREAD=8
+      export NCCL_NSOCKS_PERTHREAD=8/16
       export NCCL_DEBUG=INFO
       export NCCL_COMM_ID=XX.XX.XX.XX:30000
-- 
+
 
 ## Benchmark:
 

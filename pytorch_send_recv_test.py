@@ -8,7 +8,7 @@ from nccl_backend import NCCLCommunicator
 
 def test_sync_send_recv_delay(args, device, communicator):
     print("<==== Test delay ====>")
-    if args.rank == 0:
+    if args.rank == 1:
         send_tensor = torch.ones(1, dtype=torch.float32, device=device)
         send_tensor += random.random()
         if args.dist_backend == 'nccl':
@@ -27,7 +27,7 @@ def test_sync_send_recv_delay(args, device, communicator):
         end_time = time.time()
         estimated_delay = (end_time - start_time)/2
         print('Send tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
-    elif args.rank == 1:
+    elif args.rank == 0:
         recv_tensor = torch.zeros(1, dtype=torch.float32, device=device)
         if args.dist_backend == 'nccl':
             dist.barrier(device_ids=[args.cuda_id])
@@ -52,7 +52,7 @@ def test_sync_send_recv_delay(args, device, communicator):
 
 def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0):
     print("<==== Test bandwidth ====>")
-    if args.rank == 0:
+    if args.rank == 1:
         send_tensor = torch.arange(args.dim, dtype=torch.float32, device=device)
 
         if args.dist_backend == 'nccl':
@@ -72,7 +72,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
         estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
         print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
-    elif args.rank == 1:
+    elif args.rank == 0:
         recv_tensor = torch.zeros(args.dim, dtype=torch.float32, device=device)
         if args.dist_backend == 'nccl':
             dist.barrier(device_ids=[args.cuda_id])
@@ -89,7 +89,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
         end_time = time.time()
         total_time = end_time - start_time
         estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
-        print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
+        print('Recv tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
         recv_tensor += random.random()
         if args.use_cuda:
@@ -153,6 +153,11 @@ def main():
         time.sleep(1)
     estimated_bandwidth /= args.iter
     e2e_time /= args.iter
+    print("This is Rank-", args.rank, "see the result in Rank 0 node.")
+    if args.rank == 0:
+        print("This is the right result (recv side):")
+    else:
+        print("Record the result in the other side !!!!!!!!!")
     print("<=====Averaged estimated bandwidth: ", estimated_bandwidth, "Gbps=====>")
     print("<=====Averaged end to end time: ", e2e_time, "s for sending <", 4 * args.dim / 1024/1024,
           "> MB data=====>")
