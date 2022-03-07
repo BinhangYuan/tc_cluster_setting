@@ -116,9 +116,13 @@ def main():
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
                         help='cuda index, if the instance has multiple GPUs.')
-    parser.add_argument('--iter', type=int, default=5, metavar='R',
+    parser.add_argument('--iter', type=int, default=20, metavar='R',
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
+
+    if args.iter <= 10:
+        print("Too few iters, increase your iter number!")
+        assert False
 
     if args.use_cuda:
         assert (torch.cuda.is_available())
@@ -146,16 +150,16 @@ def main():
     '''
     estimated_bandwidth = 0
     e2e_time = 0
-    for i in range(args.iter + 1):
-        if i == 0:
+    for i in range(args.iter):
+        if i < 10:
             test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
         else:
             current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
             estimated_bandwidth += current_bandwidth
             e2e_time += current_time
         time.sleep(1)
-    estimated_bandwidth /= args.iter
-    e2e_time /= args.iter
+    estimated_bandwidth /= (args.iter - 10)
+    e2e_time /= (args.iter - 10)
     print("This is Rank-", args.rank, "see the result in Rank 0 node.")
     if args.rank == 0:
         print("This is the right result (recv side):")
