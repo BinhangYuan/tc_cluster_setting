@@ -34,7 +34,9 @@
   - eu-central-1 (Frankfurt)
   - eu-west-1 (Ireland)
 
-- Delay is tested by ping
+- Delay is tested by ping (connected private IP)
+
+      ping -c 3 IP
 - NCCL time is by transferring 64 MB data multiple times
 - NCCL bandwidth is based on the above 
 - Iperf3 commands:
@@ -44,17 +46,17 @@
 
 ### Oregon (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send)    | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|--------------------|-------|--------|--------|---------------|---------------|
-| Oregon          | Virginia           |       |        |        |               |               |
-| Oregon          | Ohio               |       |        |        |               |               |
-| Oregon          | Tokyo              |       |        |        |               |               |
-| Oregon          | Seoul              |       |        |        |               |               |
-| Oregon          | Singapore          |       |        |        |               |               | 
-| Oregon          | Sydney             |       |        |        |               |               |
-| Oregon          | London             |       |        |        |               |               |
-| Oregon          | Frankfurt          |       |        |        |               |               |
-| Oregon          | Ireland            |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send)    | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|--------------------|--------|--------|--------|---------------|---------------|
+| Oregon          | Virginia           | 67 ms  |        |        |               |               |
+| Oregon          | Ohio               | 49 ms  |        |        |               |               |
+| Oregon          | Tokyo              | 96 ms  |        |        |               |               |
+| Oregon          | Seoul              | 124 ms |        |        |               |               |
+| Oregon          | Singapore          | 168 ms |        |        |               |               | 
+| Oregon          | Sydney             | 139 ms |        |        |               |               |
+| Oregon          | London             | 136 ms |        |        |               |               |
+| Oregon          | Frankfurt          | 143 ms |        |        |               |               |
+| Oregon          | Ireland            | 124 ms |        |        |               |               |
 
 
 ### Virginia (NCCL recv / Iperf3 server)

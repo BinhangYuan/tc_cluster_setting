@@ -49,6 +49,9 @@
   - Start vpn (in root mode of each instance)
         
          bash swan_start_vpn.sh
+    or
+         bash aws_cluster_run_cmd.sh swan_start_vpn.sh
+
 
 - Set network interface (updated below):
 

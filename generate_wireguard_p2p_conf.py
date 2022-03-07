@@ -1,34 +1,44 @@
-vpn_server_ip='34.220.155.244'
-
 ip_region_dict = {}
-ip_priviate_dict = {}
-ip_region_dict['34.220.155.244']='oregon'
-ip_priviate_dict['34.220.155.244']='172.31.47.46'
-ip_region_dict['18.206.81.198']='virginia'
-ip_priviate_dict['18.206.81.198']='172.31.81.36'
-ip_region_dict['3.142.239.129']='ohio'
-ip_priviate_dict["3.142.239.129"]='172.31.30.93'
-#ip_region_dict['54.199.156.57']='tokyo'
-ip_region_dict['54.169.216.236']='singapore'
-ip_priviate_dict['54.169.216.236']='172.31.28.41'
-#ip_region_dict['13.236.153.216']='sydney'
-#ip_region_dict['35.182.88.213']='central'
-#ip_region_dict['3.67.175.232']='frankfurt'
-ip_region_dict['3.248.222.64']='ireland'
-ip_priviate_dict['3.248.222.64']='172.31.25.5'
+ip_private_dict = {}
+
+ip_region_dict['34.210.166.14']='oregon'
+ip_private_dict['34.210.166.14']='172.31.32.123'
+
+ip_region_dict['34.239.149.103']='virginia'
+ip_private_dict['34.239.149.103']='172.31.84.109'
+
+ip_region_dict['52.14.154.37']='ohio'
+ip_private_dict["52.14.154.37"]='172.31.18.48'
+
+ip_region_dict['54.238.207.166']='tokyo'
+ip_private_dict['54.238.207.166']='172.31.21.127'
+
+ip_region_dict['3.38.106.7']='seoul'
+ip_private_dict['3.38.106.7']='172.31.5.28'
+
+ip_region_dict['13.212.11.226']='singapore'
+ip_private_dict['13.212.11.226']='172.31.19.162'
+
+ip_region_dict['54.206.163.141']='sydney'
+ip_private_dict['54.206.163.141']='172.31.1.165'
+
+ip_region_dict['18.134.207.251']='london'
+ip_private_dict['18.134.207.251']='172.31.16.34'
+
+ip_region_dict['18.194.249.150']='frankfurt'
+ip_private_dict['18.194.249.150']='172.31.29.106'
+
+ip_region_dict['54.170.34.28']='ireland'
+ip_private_dict['54.170.34.28']='172.31.31.5'
 
 ip_keys= {}
 
-last_no = 11
+last_no = 10
 for public_ip in ip_region_dict.keys():
-    if public_ip == vpn_server_ip:
-        file_prefix = "wireguard/s_"
-        ip_priviate_dict[public_ip] = "192.168.100.10"
-    else:
-        file_prefix = "wireguard/c_"
-        ip_priviate_dict[public_ip] = "192.168.100." + str(last_no)  # limits to 256 so far
-        last_no += 1
-        assert last_no < 256
+    file_prefix = "wireguard/"
+    ip_private_dict[public_ip] = "192.168.100." + str(last_no)  # limits to 256 so far
+    last_no += 1
+    assert last_no < 256
     with open(file_prefix + public_ip + '_public.key') as public_key_f:
         current_public_key = public_key_f.read()
     with open(file_prefix + public_ip + '_private.key') as private_key_f:
@@ -38,13 +48,16 @@ for public_ip in ip_region_dict.keys():
         'private_key': current_private_key[:-1]
     }
 
-print(ip_keys)
-print(ip_priviate_dict)
+for ip in ip_keys.keys():
+    print(ip, ip_keys[ip])
+
+for ip in ip_private_dict.keys():
+    print(ip_region_dict[ip], ip, ip_private_dict[ip])
 
 for self_ip in ip_region_dict.keys():
     with open("./wireguard/" + self_ip + "_gen.conf", 'w') as conf_f:
         conf_f.write("[Interface]\n")
-        conf_f.write("Address = "+ip_priviate_dict[self_ip]+"\n")
+        conf_f.write("Address = " + ip_private_dict[self_ip] + "\n")
         conf_f.write("PrivateKey = " + ip_keys[self_ip]['private_key'] + "\n")
         conf_f.write("ListenPort = 51820\n\n")
         
@@ -52,6 +65,6 @@ for self_ip in ip_region_dict.keys():
             if other_ip != self_ip:
                 conf_f.write("[Peer]\n")
                 conf_f.write("PublicKey = " + ip_keys[other_ip]['public_key'] + "\n")
-                conf_f.write("AllowedIPs = " + ip_priviate_dict[other_ip] + "\n")
+                conf_f.write("AllowedIPs = " + ip_private_dict[other_ip] + "\n")
                 conf_f.write("Endpoint = " + other_ip + ":51820\n\n")
 
