@@ -20,7 +20,7 @@ def test_sync_send_recv_delay(args, device, communicator):
             torch.cuda.synchronize()
         start_time = time.time()
 
-        communicator.send(send_tensor, dst=1)
+        communicator.send(send_tensor, dst=0)
 
         if args.use_cuda:
             torch.cuda.synchronize()
@@ -37,7 +37,7 @@ def test_sync_send_recv_delay(args, device, communicator):
             torch.cuda.synchronize()
         start_time = time.time()
 
-        communicator.recv(recv_tensor, src=0)
+        communicator.recv(recv_tensor, src=1)
 
         if args.use_cuda:
             torch.cuda.synchronize()
@@ -63,7 +63,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
             torch.cuda.synchronize()
         start_time = time.time()
 
-        communicator.send(send_tensor, dst=1)
+        communicator.send(send_tensor, dst=0)
 
         if args.use_cuda:
             torch.cuda.synchronize()
@@ -82,7 +82,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
             torch.cuda.synchronize()
         start_time = time.time()
 
-        communicator.recv(recv_tensor, src=0)
+        communicator.recv(recv_tensor, src=1)
 
         if args.use_cuda:
             torch.cuda.synchronize()

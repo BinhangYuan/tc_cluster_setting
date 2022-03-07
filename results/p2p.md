@@ -46,133 +46,133 @@
 
 ### Oregon (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send)    | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|--------------------|--------|--------|--------|---------------|---------------|
-| Oregon          | Virginia           | 67 ms  |        |        |               |               |
-| Oregon          | Ohio               | 49 ms  |        |        |               |               |
-| Oregon          | Tokyo              | 96 ms  |        |        |               |               |
-| Oregon          | Seoul              | 124 ms |        |        |               |               |
-| Oregon          | Singapore          | 168 ms |        |        |               |               | 
-| Oregon          | Sydney             | 139 ms |        |        |               |               |
-| Oregon          | London             | 136 ms |        |        |               |               |
-| Oregon          | Frankfurt          | 143 ms |        |        |               |               |
-| Oregon          | Ireland            | 124 ms |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Oregon          | Virginia        | 67 ms  |        |        |               |               |
+| Oregon          | Ohio            | 49 ms  |        |        |               |               |
+| Oregon          | Tokyo           | 96 ms  |        |        |               |               |
+| Oregon          | Seoul           | 124 ms |        |        |               |               |
+| Oregon          | Singapore       | 163 ms |        |        |               |               | 
+| Oregon          | Sydney          | 139 ms |        |        |               |               |
+| Oregon          | London          | 136 ms |        |        |               |               |
+| Oregon          | Frankfurt       | 143 ms |        |        |               |               |
+| Oregon          | Ireland         | 124 ms |        |        |               |               |
 
 
 ### Virginia (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Virginia        | Oregon          |       |        |        |               |               |
-| Virginia        | Ohio            |       |        |        |               |               |
-| Virginia        | Tokyo           |       |        |        |               |               |
-| Virginia        | Seoul           |       |        |        |               |               |
-| Virginia        | Singapore       |       |        |        |               |               | 
-| Virginia        | Sydney          |       |        |        |               |               |
-| Virginia        | London          |       |        |        |               |               |
-| Virginia        | Frankfurt       |       |        |        |               |               |
-| Virginia        | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Virginia        | Oregon          | 67 ms  |        |        |               |               |
+| Virginia        | Ohio            | 11 ms  |        |        |               |               |
+| Virginia        | Tokyo           | 143 ms |        |        |               |               |
+| Virginia        | Seoul           | 172 ms |        |        |               |               |
+| Virginia        | Singapore       | 230 ms |        |        |               |               | 
+| Virginia        | Sydney          | 197 ms |        |        |               |               |
+| Virginia        | London          | 76 ms  |        |        |               |               |
+| Virginia        | Frankfurt       | 90 ms  |        |        |               |               |
+| Virginia        | Ireland         | 67 ms  |        |        |               |               |
 
 
 ### Ohio (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Ohio            | Oregon          |       |        |        |               |               |
-| Ohio            | Virginia        |       |        |        |               |               |
-| Ohio            | Tokyo           |       |        |        |               |               |
-| Ohio            | Seoul           |       |        |        |               |               |
-| Ohio            | Singapore       |       |        |        |               |               | 
-| Ohio            | Sydney          |       |        |        |               |               |
-| Ohio            | London          |       |        |        |               |               |
-| Ohio            | Frankfurt       |       |        |        |               |               |
-| Ohio            | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Ohio            | Oregon          | 48 ms  |        |        |               |               |
+| Ohio            | Virginia        | 11 ms  |        |        |               |               |
+| Ohio            | Tokyo           | 130 ms |        |        |               |               |
+| Ohio            | Seoul           | 159 ms |        |        |               |               |
+| Ohio            | Singapore       | 197 ms |        |        |               |               | 
+| Ohio            | Sydney          | 185 ms |        |        |               |               |
+| Ohio            | London          | 86 ms  |        |        |               |               |
+| Ohio            | Frankfurt       | 99 ms  |        |        |               |               |
+| Ohio            | Ireland         | 77 ms  |        |        |               |               |
 
 ### Tokyo (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Tokyo           | Oregon          |       |        |        |               |               |
-| Tokyo           | Virginia        |       |        |        |               |               |
-| Tokyo           | Ohio            |       |        |        |               |               |
-| Tokyo           | Seoul           |       |        |        |               |               |
-| Tokyo           | Singapore       |       |        |        |               |               | 
-| Tokyo           | Sydney          |       |        |        |               |               |
-| Tokyo           | London          |       |        |        |               |               |
-| Tokyo           | Frankfurt       |       |        |        |               |               |
-| Tokyo           | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Tokyo           | Oregon          | 97 ms  |        |        |               |               |
+| Tokyo           | Virginia        | 143 ms |        |        |               |               |
+| Tokyo           | Ohio            | 130 ms |        |        |               |               |
+| Tokyo           | Seoul           | 34 ms  |        |        |               |               |
+| Tokyo           | Singapore       | 73 ms  |        |        |               |               | 
+| Tokyo           | Sydney          | 100 ms |        |        |               |               |
+| Tokyo           | London          | 210 ms |        |        |               |               |
+| Tokyo           | Frankfurt       | 223 ms |        |        |               |               |
+| Tokyo           | Ireland         | 199 ms |        |        |               |               |
 
 
 ### Seoul (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Seoul           | Oregon          |       |        |        |               |               |
-| Seoul           | Virginia        |       |        |        |               |               |
-| Seoul           | Ohio            |       |        |        |               |               |
-| Seoul           | Tokyo           |       |        |        |               |               |
-| Seoul           | Singapore       |       |        |        |               |               | 
-| Seoul           | Sydney          |       |        |        |               |               |
-| Seoul           | London          |       |        |        |               |               |
-| Seoul           | Frankfurt       |       |        |        |               |               |
-| Seoul           | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Seoul           | Oregon          | 124 ms |        |        |               |               |
+| Seoul           | Virginia        | 172 ms |        |        |               |               |
+| Seoul           | Ohio            | 159 ms |        |        |               |               |
+| Seoul           | Tokyo           | 33 ms  |        |        |               |               |
+| Seoul           | Singapore       | 74 ms  |        |        |               |               | 
+| Seoul           | Sydney          | 148 ms |        |        |               |               |
+| Seoul           | London          | 238 ms |        |        |               |               |
+| Seoul           | Frankfurt       | 235 ms |        |        |               |               |
+| Seoul           | Ireland         | 228 ms |        |        |               |               |
 
 ### Singapore (NCCL recv / Iperf3 server)
 
-| Region 1 (recv)    | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|--------------------|-----------------|-------|--------|--------|---------------|---------------|
-| Singapore          | Oregon          |       |        |        |               |               |
-| Singapore          | Virginia        |       |        |        |               |               |
-| Singapore          | Ohio            |       |        |        |               |               |
-| Singapore          | Tokyo           |       |        |        |               |               |
-| Singapore          | Seoul           |       |        |        |               |               | 
-| Singapore          | Sydney          |       |        |        |               |               |
-| Singapore          | London          |       |        |        |               |               |
-| Singapore          | Frankfurt       |       |        |        |               |               |
-| Singapore          | Ireland         |       |        |        |               |               |
+| Region 1 (recv)    | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|--------------------|-----------------|--------|--------|--------|---------------|---------------|
+| Singapore          | Oregon          | 163 ms |        |        |               |               |
+| Singapore          | Virginia        | 230 ms |        |        |               |               |
+| Singapore          | Ohio            | 197 ms |        |        |               |               |
+| Singapore          | Tokyo           | 73 ms  |        |        |               |               |
+| Singapore          | Seoul           | 74 ms  |        |        |               |               | 
+| Singapore          | Sydney          | 92 ms  |        |        |               |               |
+| Singapore          | London          | 169 ms |        |        |               |               |
+| Singapore          | Frankfurt       | 155 ms |        |        |               |               |
+| Singapore          | Ireland         | 179 ms |        |        |               |               |
 
 ### Sydney (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Sydney          | Oregon          |       |        |        |               |               |
-| Sydney          | Virginia        |       |        |        |               |               |
-| Sydney          | Ohio            |       |        |        |               |               |
-| Sydney          | Tokyo           |       |        |        |               |               |
-| Sydney          | Seoul           |       |        |        |               |               | 
-| Sydney          | Singapore       |       |        |        |               |               |
-| Sydney          | London          |       |        |        |               |               |
-| Sydney          | Frankfurt       |       |        |        |               |               |
-| Sydney          | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Sydney          | Oregon          | 139 ms |        |        |               |               |
+| Sydney          | Virginia        | 197 ms |        |        |               |               |
+| Sydney          | Ohio            | 186 ms |        |        |               |               |
+| Sydney          | Tokyo           | 114 ms |        |        |               |               |
+| Sydney          | Seoul           | 140 ms |        |        |               |               | 
+| Sydney          | Singapore       | 94 ms  |        |        |               |               |
+| Sydney          | London          | 262 ms |        |        |               |               |
+| Sydney          | Frankfurt       | 265 ms |        |        |               |               |
+| Sydney          | Ireland         | 254 ms |        |        |               |               |
 
 ### London (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| London          | Oregon          |       |        |        |               |               |
-| London          | Virginia        |       |        |        |               |               |
-| London          | Ohio            |       |        |        |               |               |
-| London          | Tokyo           |       |        |        |               |               |
-| London          | Seoul           |       |        |        |               |               | 
-| London          | Singapore       |       |        |        |               |               |
-| London          | Sydney          |       |        |        |               |               |
-| London          | Frankfurt       |       |        |        |               |               |
-| London          | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| London          | Oregon          | 134 ms |        |        |               |               |
+| London          | Virginia        | 76 ms  |        |        |               |               |
+| London          | Ohio            | 86 ms  |        |        |               |               |
+| London          | Tokyo           | 210 ms |        |        |               |               |
+| London          | Seoul           | 238 ms |        |        |               |               | 
+| London          | Singapore       | 169 ms |        |        |               |               |
+| London          | Sydney          | 263 ms |        |        |               |               |
+| London          | Frankfurt       | 14 ms  |        |        |               |               |
+| London          | Ireland         | 12 ms  |        |        |               |               |
 
 
 ### Frankfurt (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|-------|--------|--------|---------------|---------------|
-| Frankfurt       | Oregon          |       |        |        |               |               |
-| Frankfurt       | Virginia        |       |        |        |               |               |
-| Frankfurt       | Ohio            |       |        |        |               |               |
-| Frankfurt       | Tokyo           |       |        |        |               |               |
-| Frankfurt       | Seoul           |       |        |        |               |               | 
-| Frankfurt       | Singapore       |       |        |        |               |               |
-| Frankfurt       | Sydney          |       |        |        |               |               |
-| Frankfurt       | London          |       |        |        |               |               |
-| Frankfurt       | Ireland         |       |        |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-T | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|--------|--------|---------------|---------------|
+| Frankfurt       | Oregon          | 147 ms |        |        |               |               |
+| Frankfurt       | Virginia        | 89 ms  |        |        |               |               |
+| Frankfurt       | Ohio            | 99 ms  |        |        |               |               |
+| Frankfurt       | Tokyo           | 223 ms |        |        |               |               |
+| Frankfurt       | Seoul           | 235 ms |        |        |               |               | 
+| Frankfurt       | Singapore       | 155 ms |        |        |               |               |
+| Frankfurt       | Sydney          | 265 ms |        |        |               |               |
+| Frankfurt       | London          | 14 ms  |        |        |               |               |
+| Frankfurt       | Ireland         | 24 ms  |        |        |               |               |
 
 ### Ireland (NCCL recv / Iperf3 server)
 
