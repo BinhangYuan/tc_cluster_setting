@@ -59,9 +59,8 @@
       export GLOO_SOCKET_IFNAME=ens3
   or    
 
-<del>export NCCL_SOCKET_IFNAME=wg0<del> 
-
-<del>export GLOO_SOCKET_IFNAME=wg0<del>
+      export NCCL_SOCKET_IFNAME=wg0
+      export GLOO_SOCKET_IFNAME=wg0
 
 
 - Set NCCL FLAGs:

@@ -42,7 +42,7 @@
       
       export NCCL_SOCKET_NTHREADS=1      
       export NCCL_NSOCKS_PERTHREAD=8
-
+pk
 - Iperf3 commands:
 
       iperf3 -s
@@ -50,8 +50,8 @@
 
 ### Oregon (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B   | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|--------|----------|---------------|---------------|
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B  | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|---------|---------------|---------------|
 | Oregon          | Virginia        | 67 ms  | 761 Mbps | 4.56 Gbps     | 1.16 Gbps     |
 | Oregon          | Ohio            | 49 ms  | 650 Mbps | 4.52 Gbps     | 1.34 Gbps     |
 | Oregon          | Tokyo           | 96 ms  | 284 Mbps | 3.71 Gbps     | 641 Mbps      |

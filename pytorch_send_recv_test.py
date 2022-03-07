@@ -91,6 +91,9 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
         estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
         print('Recv tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
+        print(recv_tensor[args.dim//2]==args.dim//2-1)
+        print(recv_tensor[args.dim-1]==args.dim-1)
+
         recv_tensor += random.random()
         if args.use_cuda:
             torch.cuda.synchronize()
