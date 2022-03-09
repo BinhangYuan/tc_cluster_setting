@@ -1,6 +1,6 @@
 source ./ip_dict.sh
 
-ip='52.59.207.74'
+ip='3.249.65.157'
 #for ip in "${!ip_region_dict[@]}"; do
   region=${ip_region_dict[$ip]}
   echo "IP $ip in region $region"

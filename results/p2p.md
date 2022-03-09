@@ -170,26 +170,26 @@
 
 | Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B    | Iperf3 pub IP | Iperf3 (swan) |
 |-----------------|-----------------|--------|-----------|---------------|---------------|
-| Frankfurt       | Oregon          | 147 ms |           |               |               |
-| Frankfurt       | Virginia        | 89 ms  |           |               |               |
-| Frankfurt       | Ohio            | 99 ms  |           |               |               |
-| Frankfurt       | Tokyo           | 223 ms |           |               |               |
-| Frankfurt       | Seoul           | 235 ms |           |               |               | 
-| Frankfurt       | Singapore       | 155 ms |           |               |               |
+| Frankfurt       | Oregon          | 147 ms | 339 Mbps  |               |               |
+| Frankfurt       | Virginia        | 89 ms  | 521 Mbps  |               |               |
+| Frankfurt       | Ohio            | 99 ms  | 474 Mbps  |               |               |
+| Frankfurt       | Tokyo           | 223 ms | 212 Mbps  |               |               |
+| Frankfurt       | Seoul           | 235 ms | 226 Mbps  |               |               | 
+| Frankfurt       | Singapore       | 155 ms | 333 Mbps  |               |               |
 | Frankfurt       | Sydney          | 265 ms | 204 Mbps  |               |               |
-| Frankfurt       | London          | 14 ms  |           |               |               |
+| Frankfurt       | London          | 14 ms  | 1.06 Gbps |               |               |
 | Frankfurt       | Ireland         | 24 ms  | 1.08 Gbps |               |               |
 
 ### Ireland (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|--------|--------|---------------|---------------|
-| Ireland         | Oregon          | 122 ms |        |               |               |
-| Ireland         | Virginia        | 66 ms  |        |               |               |
-| Ireland         | Ohio            | 77 ms  |        |               |               |
-| Ireland         | Tokyo           | 199 ms |        |               |               |
-| Ireland         | Seoul           | 228 ms |        |               |               | 
-| Ireland         | Singapore       | 179 ms |        |               |               |
-| Ireland         | Sydney          | 255 ms |        |               |               |
-| Ireland         | London          | 11 ms  |        |               |               |
-| Ireland         | Frankfurt       | 25 ms  |        |               |               |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B    | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|-----------|---------------|---------------|
+| Ireland         | Oregon          | 122 ms | 726 Mbps  |               |               |
+| Ireland         | Virginia        | 66 ms  | 794 Mbps  |               |               |
+| Ireland         | Ohio            | 77 ms  | 447 Mbps  |               |               |
+| Ireland         | Tokyo           | 199 ms | 460 Mbps  |               |               |
+| Ireland         | Seoul           | 228 ms | 353 Mbps  |               |               | 
+| Ireland         | Singapore       | 179 ms | 482 Mbps  |               |               |
+| Ireland         | Sydney          | 255 ms | 339 Mbps  |               |               |
+| Ireland         | London          | 11 ms  | 1.08 Gbps |               |               |
+| Ireland         | Frankfurt       | 25 ms  | 1.10 Gbps |               |               |
