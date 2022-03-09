@@ -69,13 +69,13 @@
 
 | Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B    | Iperf3 pub IP | Iperf3 (swan) |
 |-----------------|-----------------|--------|-----------|---------------|---------------|
-| Virginia        | Oregon          | 67 ms  |           |               |               |
+| Virginia        | Oregon          | 67 ms  | 1.15 Gbps |               |               |
 | Virginia        | Ohio            | 11 ms  | 1.12 Gbps |               |               |
 | Virginia        | Tokyo           | 143 ms | 524 Mbps  |               |               |
-| Virginia        | Seoul           | 172 ms |           |               |               |
-| Virginia        | Singapore       | 230 ms |           |               |               |
+| Virginia        | Seoul           | 172 ms | 500 Mbps  |               |               |
+| Virginia        | Singapore       | 230 ms | 364 Mbps  |               |               |
 | Virginia        | Sydney          | 197 ms | 383 Mbps  |               |               | 
-| Virginia        | London          | 76 ms  |           |               |               | 
+| Virginia        | London          | 76 ms  | 1.16 Gbps |               |               | 
 | Virginia        | Frankfurt       | 90 ms  | 1.02 Gbps |               |               |
 | Virginia        | Ireland         | 67 ms  | 1.05 Gbps |               |               |
 
