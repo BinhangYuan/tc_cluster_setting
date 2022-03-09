@@ -6,3 +6,5 @@ for ip in "${!ip_region_dict[@]}"; do
     echo "execute CMD in IP $ip - region $region"
     ssh -i ../pems/binhang_ds3_aws_"$region".pem ubuntu@"$ip" "bash -s" < ./"$script" &
 done
+
+wait

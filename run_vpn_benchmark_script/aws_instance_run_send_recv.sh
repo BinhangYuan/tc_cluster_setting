@@ -2,7 +2,7 @@ cd ~/tc_cluster_setting
 source activate pytorch_p38
 
 ip=$1
-rank=$3
+rank=$2
 
 export NCCL_SOCKET_IFNAME=wg0
 export GLOO_SOCKET_IFNAME=wg0
@@ -11,7 +11,8 @@ export NCCL_NSOCKS_PERTHREAD=4
 
 if [ "$rank" -eq 0 ]
 then
-  python pytorch_send_recv_test.py --iter 20 --dist-url tcp://"$ip":9000 --world-size 2 --dist-backend cupy_nccl --use-cuda True --rank 0
+  title=$3
+  python pytorch_send_recv_test.py --iter 30 --dist-url tcp://"$ip":9000 --world-size 2 --dist-backend cupy_nccl --use-cuda True --rank 0 >> "./nccl_run_logs/${title}_wg0_4_4.log"
 else
-  python pytorch_send_recv_test.py --iter 20 --dist-url tcp://"$ip":9000 --world-size 2 --dist-backend cupy_nccl --use-cuda True --rank 1 >> "./foo.log"
+  python pytorch_send_recv_test.py --iter 30 --dist-url tcp://"$ip":9000 --world-size 2 --dist-backend cupy_nccl --use-cuda True --rank 1 >> "./foo.log"
 fi
