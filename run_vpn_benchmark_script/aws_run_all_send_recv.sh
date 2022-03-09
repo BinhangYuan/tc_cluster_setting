@@ -1,6 +1,7 @@
 source ./ip_dict.sh
 
-for rank0_ip in "${!ip_private_dict[@]}"; do
+rank0_ip='52.59.207.74'
+#for rank0_ip in "${!ip_private_dict[@]}"; do
   for rank1_ip in "${!ip_private_dict[@]}"; do
     if [ "$rank0_ip" !=  "$rank1_ip" ]
     then
@@ -12,4 +13,4 @@ for rank0_ip in "${!ip_private_dict[@]}"; do
         wait
     fi
   done
-done
+#done

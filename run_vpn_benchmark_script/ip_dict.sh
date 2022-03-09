@@ -33,10 +33,11 @@ ip_region_dict['18.168.255.66']='london'
 #ip_private_dict['18.168.255.66']='172.31.16.34'
 ip_private_dict['18.168.255.66']='192.168.100.17'
 
-ip_region_dict['3.249.65.157']='ireland'
-#ip_private_dict['3.249.65.157']='172.31.31.5'
-ip_private_dict['3.249.65.157']='192.168.100.18'
-
 ip_region_dict['52.59.207.74']='frankfurt'
 #ip_private_dict['52.59.207.74']='172.31.29.106'
-ip_private_dict['52.59.207.74']='192.168.100.19'
+ip_private_dict['52.59.207.74']='192.168.100.18'
+
+ip_region_dict['3.249.65.157']='ireland'
+#ip_private_dict['3.249.65.157']='172.31.31.5'
+ip_private_dict['3.249.65.157']='192.168.100.19'
+
