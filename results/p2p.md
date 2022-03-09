@@ -50,17 +50,17 @@ pk
 
 ### Oregon (NCCL recv / Iperf3 server)
 
-| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B | NCCL-B(swan) | Iperf3 pub IP | Iperf3 (swan) |
-|-----------------|-----------------|--------|--------|--------------|---------------|---------------|
-| Oregon          | Virginia        | 67 ms  |        | 761 Mbps     | 4.56 Gbps     | 1.16 Gbps     |
-| Oregon          | Ohio            | 49 ms  |        | 650 Mbps     | 4.52 Gbps     | 1.34 Gbps     |
-| Oregon          | Tokyo           | 96 ms  |        | 284 Mbps     | 3.71 Gbps     | 641 Mbps      |
-| Oregon          | Seoul           | 124 ms |        | 238 Mbps     | 2.82 Gbps     | 488 Mbps      |
-| Oregon          | Singapore       | 163 ms |        | 171 Mbps     | 2.05 Gbps     | 384 Mbps      | 
-| Oregon          | Sydney          | 139 ms |        | 218 Mbps     | 2.50 Gbps     | 430 Mbps      |
-| Oregon          | London          | 136 ms |        | 228 Mbps     | 2.64 Gbps     | 475 Mbps      |
-| Oregon          | Frankfurt       | 143 ms |        | 177 Mbps     | 2.40 Gbps     | 458 Mbps      |
-| Oregon          | Ireland         | 124 ms |        | 300 Mbps     | 2.85 Gbps     | 424 Mbps      |
+| Region 1 (recv) | Region 2 (send) | Delay  | NCCL-B(wg) | NCCL-B(swan) | Iperf3 pub IP | Iperf3 (swan) |
+|-----------------|-----------------|--------|------------|--------------|---------------|---------------|
+| Oregon          | Virginia        | 67 ms  | 790 Mbps   | 761 Mbps     | 4.56 Gbps     | 1.16 Gbps     |
+| Oregon          | Ohio            | 49 ms  | 1.10 Gbps  | 650 Mbps     | 4.52 Gbps     | 1.34 Gbps     |
+| Oregon          | Tokyo           | 96 ms  | 523 Mbps   | 284 Mbps     | 3.71 Gbps     | 641 Mbps      |
+| Oregon          | Seoul           | 124 ms | 460 Mbps   | 238 Mbps     | 2.82 Gbps     | 488 Mbps      |
+| Oregon          | Singapore       | 163 ms | 341 Mbps   | 171 Mbps     | 2.05 Gbps     | 384 Mbps      | 
+| Oregon          | Sydney          | 139 ms | 360 Mbps   | 218 Mbps     | 2.50 Gbps     | 430 Mbps      |
+| Oregon          | London          | 136 ms | 420 Mbps   | 228 Mbps     | 2.64 Gbps     | 475 Mbps      |
+| Oregon          | Frankfurt       | 143 ms | 404 Mbps   | 177 Mbps     | 2.40 Gbps     | 458 Mbps      |
+| Oregon          | Ireland         | 124 ms | 482 Mbps   | 300 Mbps     | 2.85 Gbps     | 424 Mbps      |
 
 
 ### Virginia (NCCL recv / Iperf3 server)

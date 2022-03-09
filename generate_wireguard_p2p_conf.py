@@ -10,6 +10,14 @@ ip_private_dict['34.239.149.103']='172.31.84.109'
 ip_region_dict['52.14.154.37']='ohio'
 ip_private_dict["52.14.154.37"]='172.31.18.48'
 
+
+ip_region_dict['44.200.22.231']='virginia2'
+ip_private_dict['44.200.22.231']='172.31.81.36'
+
+ip_region_dict['3.136.84.63']='ohio2'
+ip_private_dict["3.136.84.63"]='172.31.30.93'
+
+
 ip_region_dict['54.238.207.166']='tokyo'
 ip_private_dict['54.238.207.166']='172.31.21.127'
 
