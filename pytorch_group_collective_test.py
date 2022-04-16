@@ -100,13 +100,13 @@ def main():
                         help='world size (default: 2)')
     parser.add_argument('--rank', type=int, default=0, metavar='R',
                         help='rank for distributed PyTorch')
-    parser.add_argument('--dim-mb', type=int, default=128, metavar='R',
+    parser.add_argument('--dim-mb', type=int, default=32, metavar='R',
                         help='size of the tensor to be sent. (in MB)')
-    parser.add_argument('--use-cuda', default=False, type=lambda x: (str(x).lower() == 'true'),
+    parser.add_argument('--use-cuda', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
                         help='cuda index, if the instance has multiple GPUs.')
-    parser.add_argument('--iter', type=int, default=12, metavar='R',
+    parser.add_argument('--iter', type=int, default=16, metavar='R',
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
 
