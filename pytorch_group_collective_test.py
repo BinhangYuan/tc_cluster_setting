@@ -66,7 +66,7 @@ def test_paradigm_central_ps(args, device, communicator: NCCLCommunicator):
 
 
 def test_paradigm_sharded_ps(args, device, communicator: NCCLCommunicator):
-    print("<==== Test Central PS ====>")
+    print("<==== Test Sharded PS ====>")
     dim = data_size_mb2dim(args.dim_mb)
     tensors = []
     for _ in range(args.iter):
@@ -117,9 +117,25 @@ def main():
                                     world_size=args.world_size, master_ip=args.dist_url)
 
     assert args.iter % args.world_size == 0
-    allreduce_time = test_paradigm_allreduce(args, device, communicator)
-    central_ps_time = test_paradigm_central_ps(args, device, communicator)
-    sharded_ps_time = test_paradigm_sharded_ps(args, device, communicator)
+    # warm up run.
+    print("Warm up run, does not count in timing")
+    test_paradigm_allreduce(args, device, communicator)
+    test_paradigm_central_ps(args, device, communicator)
+    test_paradigm_sharded_ps(args, device, communicator)
+
+    allreduce_time = 0
+    central_ps_time = 0
+    sharded_ps_time = 0
+
+    n = 5
+    for i in range(n):
+        allreduce_time = test_paradigm_allreduce(args, device, communicator)
+        central_ps_time = test_paradigm_central_ps(args, device, communicator)
+        sharded_ps_time = test_paradigm_sharded_ps(args, device, communicator)
+
+    allreduce_time = allreduce_time / n
+    central_ps_time = central_ps_time / n
+    sharded_ps_time = sharded_ps_time / n
 
     print("<=====Averaged local AllReduce time: ", allreduce_time, "s.=====>")
     print("<=====Averaged local Central PS time: ", central_ps_time, "s.=====>")
