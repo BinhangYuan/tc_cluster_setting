@@ -81,8 +81,8 @@ def test_paradigm_sharded_ps(args, device, communicator: NCCLCommunicator):
     cupy.cuda.nccl.groupStart()
     for i in range(args.iter):
         communicator.broadcast(tensors[i], src=i % args.world_size)
-    torch.cuda.synchronize()
     cupy.cuda.nccl.groupEnd()
+    torch.cuda.synchronize()
     end_time = time.time()
     dist.barrier()
     total_time = end_time - start_time
