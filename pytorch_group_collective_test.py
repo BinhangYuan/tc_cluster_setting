@@ -36,8 +36,8 @@ def test_paradigm_allreduce(args, device, communicator: NCCLCommunicator):
     for i in range(args.iter):
         communicator.all_reduce(tensors[i])
     torch.cuda.synchronize()
-    end_time = time.time()
     dist.barrier()
+    end_time = time.time()
 
     total_time = end_time - start_time
     print(args.iter, '-allReduce of tensor <', args.dim_mb, "> MB takes ", total_time, "seconds.")
@@ -58,8 +58,8 @@ def test_paradigm_central_ps(args, device, communicator: NCCLCommunicator):
     for i in range(args.iter):
         communicator.broadcast(tensors[i], src=0)
     torch.cuda.synchronize()
-    end_time = time.time()
     dist.barrier()
+    end_time = time.time()
     total_time = end_time - start_time
     print(args.iter, '-central PS of tensor <', args.dim_mb, "> MB takes ", total_time, "seconds.")
     return total_time
@@ -129,9 +129,9 @@ def main():
 
     n = 5
     for i in range(n):
-        allreduce_time = test_paradigm_allreduce(args, device, communicator)
-        central_ps_time = test_paradigm_central_ps(args, device, communicator)
-        sharded_ps_time = test_paradigm_sharded_ps(args, device, communicator)
+        allreduce_time += test_paradigm_allreduce(args, device, communicator)
+        central_ps_time += test_paradigm_central_ps(args, device, communicator)
+        sharded_ps_time += test_paradigm_sharded_ps(args, device, communicator)
 
     allreduce_time = allreduce_time / n
     central_ps_time = central_ps_time / n
