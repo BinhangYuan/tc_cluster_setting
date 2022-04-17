@@ -70,7 +70,7 @@ def test_paradigm_sharded_ps(args, device, communicator: NCCLCommunicator):
     dim = data_size_mb2dim(args.dim_mb) // args.world_size
     input_tensors = []
     output_tensors = []
-    for _ in range(args.iter):
+    for _ in range(args.world_size):
         input_tensors.append(torch.arange(dim, dtype=torch.float32, device=device))
         output_tensors.append(torch.zeros(dim, dtype=torch.float32, device=device))
     dist.barrier()
