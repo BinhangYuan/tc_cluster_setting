@@ -1,7 +1,7 @@
 source ./ip_list.sh
 
 world_size=${#ips[@]}
-dim=64
+dim=1024
 
 for rank in "${!ips[@]}"
 do

@@ -54,7 +54,6 @@ class NCCLCommunicator:
              tensor: torch.Tensor,
              dst: int,
              stream=cupy.cuda.Stream.null):
-        cupy.cuda.nccl.groupStart()
         self.comm.send(
             tensor.data_ptr(),
             torch.numel(tensor),
@@ -62,13 +61,11 @@ class NCCLCommunicator:
             dst,
             stream.ptr
         )
-        cupy.cuda.nccl.groupEnd()
 
     def recv(self,
              tensor: torch.Tensor,
              src: int,
              stream=cupy.cuda.Stream.null):
-        cupy.cuda.nccl.groupStart()
         self.comm.recv(
             tensor.data_ptr(),
             torch.numel(tensor),
@@ -76,7 +73,6 @@ class NCCLCommunicator:
             src,
             stream.ptr
         )
-        cupy.cuda.nccl.groupEnd()
 
     def broadcast(self,
                   tensor: torch.Tensor,
@@ -105,10 +101,33 @@ class NCCLCommunicator:
             stream.ptr
         )
 
+    def all_to_all(self,
+                   output_tensor_list: List[torch.Tensor],
+                   input_tensor_list: List[torch.Tensor],
+                   stream=cupy.cuda.Stream.null):
+        assert len(output_tensor_list) == self.world_size and len(input_tensor_list) == self.world_size
+        cupy.cuda.nccl.groupStart()
+        for i in range(self.world_size):
+            self.send(input_tensor_list[i], i, stream)
+            self.recv(output_tensor_list[i], i, stream)
+        cupy.cuda.nccl.groupEnd()
+
+    def all_gather(self,
+                   tensor: torch.Tensor,
+                   output_tensor_list: List[torch.Tensor],
+                   stream=cupy.cuda.Stream.null
+                   ):
+        assert len(output_tensor_list) == self.world_size
+        cupy.cuda.nccl.groupStart()
+        for i in range(self.world_size):
+            self.send(tensor, i, stream)
+            self.recv(output_tensor_list[i], i, stream)
+        cupy.cuda.nccl.groupEnd()
+
     def all_reduce(self,
-                  tensor: torch.Tensor,
-                  stream=cupy.cuda.Stream.null,
-                  op=cupy.cuda.nccl.NCCL_SUM):
+                   tensor: torch.Tensor,
+                   stream=cupy.cuda.Stream.null,
+                   op=cupy.cuda.nccl.NCCL_SUM):
         self.comm.allReduce(
             tensor.data_ptr(),
             tensor.data_ptr(),

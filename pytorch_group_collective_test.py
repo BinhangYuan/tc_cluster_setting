@@ -26,14 +26,14 @@ def collect_run_time(args, local_run_time: float):
 
 def test_paradigm_allreduce(args, device, communicator: NCCLCommunicator):
     print("<==== Test AllReduce ====>")
-    dim = data_size_mb2dim(args.dim_mb)
+    dim = data_size_mb2dim(args.dim_mb) // args.world_size
     tensors = []
-    for _ in range(args.iter):
+    for _ in range(args.world_size):
         tensors.append(torch.arange(dim, dtype=torch.float32, device=device))
 
     dist.barrier()
     start_time = time.time()
-    for i in range(args.iter):
+    for i in range(args.world_size):
         communicator.all_reduce(tensors[i])
     torch.cuda.synchronize()
     dist.barrier()
@@ -46,16 +46,16 @@ def test_paradigm_allreduce(args, device, communicator: NCCLCommunicator):
 
 def test_paradigm_central_ps(args, device, communicator: NCCLCommunicator):
     print("<==== Test Central PS ====>")
-    dim = data_size_mb2dim(args.dim_mb)
+    dim = data_size_mb2dim(args.dim_mb) // args.world_size
     tensors = []
-    for _ in range(args.iter):
+    for _ in range(args.world_size):
         tensors.append(torch.arange(dim, dtype=torch.float32, device=device))
 
     dist.barrier()
     start_time = time.time()
-    for i in range(args.iter):
+    for i in range(args.world_size):
         communicator.reduce(tensors[i], dst=0)
-    for i in range(args.iter):
+    for i in range(args.world_size):
         communicator.broadcast(tensors[i], src=0)
     torch.cuda.synchronize()
     dist.barrier()
@@ -67,21 +67,20 @@ def test_paradigm_central_ps(args, device, communicator: NCCLCommunicator):
 
 def test_paradigm_sharded_ps(args, device, communicator: NCCLCommunicator):
     print("<==== Test Sharded PS ====>")
-    dim = data_size_mb2dim(args.dim_mb)
-    tensors = []
+    dim = data_size_mb2dim(args.dim_mb) // args.world_size
+    input_tensors = []
+    output_tensors = []
     for _ in range(args.iter):
-        tensors.append(torch.arange(dim, dtype=torch.float32, device=device))
-
+        input_tensors.append(torch.arange(dim, dtype=torch.float32, device=device))
+        output_tensors.append(torch.zeros(dim, dtype=torch.float32, device=device))
     dist.barrier()
     start_time = time.time()
-    cupy.cuda.nccl.groupStart()
-    for i in range(args.iter):
-        communicator.reduce(tensors[i], dst=i % args.world_size)
-    cupy.cuda.nccl.groupEnd()
-    cupy.cuda.nccl.groupStart()
-    for i in range(args.iter):
-        communicator.broadcast(tensors[i], src=i % args.world_size)
-    cupy.cuda.nccl.groupEnd()
+
+    communicator.all_to_all(input_tensors, output_tensors)
+    for i in range(1, args.world_size):
+        output_tensors[0].add_(output_tensors[i])
+    communicator.all_gather(output_tensors[0], input_tensors)
+
     torch.cuda.synchronize()
     end_time = time.time()
     dist.barrier()
@@ -100,8 +99,8 @@ def main():
                         help='world size (default: 2)')
     parser.add_argument('--rank', type=int, default=0, metavar='R',
                         help='rank for distributed PyTorch')
-    parser.add_argument('--dim-mb', type=int, default=32, metavar='R',
-                        help='size of the tensor to be sent. (in MB)')
+    parser.add_argument('--dim-mb', type=int, default=1024, metavar='R',
+                        help='size of the tensor to be synced. (in MB)')
     parser.add_argument('--use-cuda', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',

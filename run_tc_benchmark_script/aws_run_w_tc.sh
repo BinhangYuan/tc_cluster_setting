@@ -4,7 +4,7 @@ world_size=${#ips[@]}
 
 delay_ms=$1
 rate_gbit=$2
-dim=64
+dim=1024
 
 for rank in "${!ips[@]}"
 do
