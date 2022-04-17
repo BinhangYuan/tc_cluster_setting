@@ -1,4 +1,3 @@
-import cupy.cuda.nccl
 import torch
 import argparse
 import time
@@ -75,15 +74,14 @@ def test_paradigm_sharded_ps(args, device, communicator: NCCLCommunicator):
         output_tensors.append(torch.zeros(dim, dtype=torch.float32, device=device))
     dist.barrier()
     start_time = time.time()
-
     communicator.all_to_all(input_tensors, output_tensors)
     for i in range(1, args.world_size):
         output_tensors[0].add_(output_tensors[i])
     communicator.all_gather(output_tensors[0], input_tensors)
-
     torch.cuda.synchronize()
-    end_time = time.time()
     dist.barrier()
+    end_time = time.time()
+
     total_time = end_time - start_time
     print(args.iter, '-sharded PS of tensor <', args.dim_mb, "> MB takes ", total_time, "seconds.")
     return total_time
