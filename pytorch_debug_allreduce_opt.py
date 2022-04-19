@@ -29,9 +29,10 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     tensor = torch.arange(dim, dtype=torch.float32, device=device)
     chunk_size = torch.numel(tensor.data) // args.world_size
     tensors = torch.split(tensor, chunk_size)
+    print(tensor)
     buffer = [torch.zeros(chunk_size) for _ in range(args.world_size)]
     print("<==== Cast 1 ====>")
-    print("Before sync:", tensor)
+    print("Before sync:", tensors)
     communicator.all_to_all(tensors, buffer)
     print(buffer[0])
     for i in range(1, args.world_size):
@@ -40,7 +41,7 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     communicator.all_gather(buffer[0], tensors)
 
     torch.cuda.synchronize()
-    print("After sync:", tensor)
+    print("After sync:", tensors)
     # tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
 
 
