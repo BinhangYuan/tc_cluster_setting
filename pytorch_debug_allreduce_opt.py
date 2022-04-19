@@ -27,6 +27,8 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     print("<==== Test Sharded PS Correct ====>")
     dim = 2 * args.world_size
     tensor = torch.arange(dim, dtype=torch.float32, device=device)
+    chunk_size = torch.numel(tensor.data) // args.world_size
+    buffer = [torch.zeros(chunk_size) for _ in range(args.world_size)]
     print("<==== Cast 1 ====>")
     print("Before sync:", tensor)
     communicator.all_reduce_opt(tensor)
