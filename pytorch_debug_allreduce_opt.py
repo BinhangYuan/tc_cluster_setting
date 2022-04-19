@@ -84,7 +84,6 @@ def main():
     communicator = NCCLCommunicator(rank=args.rank, intra_gpu_rank=args.cuda_id,
                                     world_size=args.world_size, master_ip=args.dist_url)
 
-    assert args.iter % args.world_size == 0
     # warm up run.
     print("Warm up run, does not count in timing")
     test_paradigm_sharded_ps_correct(args, device, communicator)
