@@ -31,13 +31,13 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     buffer = [torch.zeros(chunk_size) for _ in range(args.world_size)]
     print("<==== Cast 1 ====>")
     print("Before sync:", tensor)
-    communicator.all_reduce_opt(tensor)
+    communicator.all_reduce_opt(tensor, buffer)
     torch.cuda.synchronize()
     print("After sync:", tensor)
     tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
     print("<==== Cast 2 ====>")
     print("Before sync:", tensor)
-    communicator.all_reduce_opt(tensor)
+    communicator.all_reduce_opt(tensor, buffer)
     torch.cuda.synchronize()
     print("After sync:", tensor)
 
