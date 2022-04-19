@@ -26,10 +26,12 @@ def collect_run_time(args, local_run_time: float):
 def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicator):
     print("<==== Test Sharded PS Correct ====>")
     dim = 2 * args.world_size
-    tensor = torch.arange(dim, dtype=torch.float32, device=device)
-    chunk_size = torch.numel(tensor.data) // args.world_size
-    tensors = torch.split(tensor, chunk_size)
-    print(tensor)
+    chunk_size = 2
+    #tensor = torch.arange(dim, dtype=torch.float32, device=device)
+    #print(tensor)
+    #chunk_size = torch.numel(tensor.data) // args.world_size
+    #tensors = torch.split(tensor, chunk_size)
+    tensors = [torch.ones(chunk_size) * i for i in range(args.world_size)]
     buffer = [torch.zeros(chunk_size) for _ in range(args.world_size)]
     print("<==== Cast 1 ====>")
     print("Before sync:", tensors)
