@@ -36,6 +36,7 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     print("<==== Cast 1 ====>")
     print("Before sync:", tensors)
     communicator.all_to_all(tensors, buffer)
+    torch.cuda.synchronize()
     print(buffer[0])
     for i in range(1, args.world_size):
         print(buffer[i])
