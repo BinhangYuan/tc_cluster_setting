@@ -49,7 +49,7 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
     communicator.all_reduce_opt(tensor, buffer)
     torch.cuda.synchronize()
-    print("After sync:", tensors)
+    print("After sync:", tensor)
 
 
 
