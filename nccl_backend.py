@@ -139,7 +139,7 @@ class NCCLCommunicator:
 
     def all_reduce_opt(self,
                        tensor: torch.Tensor,
-                       tensor_buffer: List[torch.Tensor],
+                       # tensor_buffer: List[torch.Tensor],
                        stream=cupy.cuda.Stream.null):
         # First do all-to-all
         assert torch.numel(tensor.data) % self.world_size == 0
