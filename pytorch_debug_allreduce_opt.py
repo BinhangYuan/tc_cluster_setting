@@ -24,10 +24,16 @@ def collect_run_time(args, local_run_time: float):
 
 
 def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicator):
-    print("<==== Test Sharded PS Correct====>")
+    print("<==== Test Sharded PS Correct ====>")
     dim = 2 * args.world_size
     tensor = torch.arange(dim, dtype=torch.float32, device=device)
-    # tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
+    print("<==== Cast 1 ====>")
+    print("Before sync:", tensor)
+    communicator.all_reduce_opt(tensor)
+    torch.cuda.synchronize()
+    print("After sync:", tensor)
+    tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
+    print("<==== Cast 2 ====>")
     print("Before sync:", tensor)
     communicator.all_reduce_opt(tensor)
     torch.cuda.synchronize()
@@ -70,8 +76,6 @@ def main():
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
                         help='cuda index, if the instance has multiple GPUs.')
-    parser.add_argument('--iter', type=int, default=16, metavar='R',
-                        help='number of iterations for benchmark.')
     args = parser.parse_args()
 
     assert (torch.cuda.is_available())
@@ -85,6 +89,7 @@ def main():
     print("Warm up run, does not count in timing")
     test_paradigm_sharded_ps_correct(args, device, communicator)
 
+    '''
     sharded_ps_time = 0
     n = 5
     for i in range(n):
@@ -98,6 +103,7 @@ def main():
     if args.rank == 0:
         print("Backend: ", args.dist_backend)
         print("<=====Averaged global Sharded PS time: ", max_shard_ps_time, "s.=====>")
+    '''
 
 
 if __name__ == '__main__':
