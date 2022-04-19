@@ -28,18 +28,21 @@ def test_paradigm_sharded_ps_correct(args, device, communicator: NCCLCommunicato
     dim = 2 * args.world_size
     tensor = torch.arange(dim, dtype=torch.float32, device=device)
     chunk_size = torch.numel(tensor.data) // args.world_size
+    tensors = torch.split(tensor, chunk_size)
     buffer = [torch.zeros(chunk_size) for _ in range(args.world_size)]
     print("<==== Cast 1 ====>")
     print("Before sync:", tensor)
-    communicator.all_reduce_opt(tensor, buffer)
+    communicator.all_to_all(tensor, buffer)
+    print(buffer[0])
+    for i in range(1, args.world_size):
+        print(buffer[i])
+        buffer[0] += buffer[i]
+    communicator.all_gather(buffer[0], tensors)
+
     torch.cuda.synchronize()
     print("After sync:", tensor)
-    tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
-    print("<==== Cast 2 ====>")
-    print("Before sync:", tensor)
-    communicator.all_reduce_opt(tensor, buffer)
-    torch.cuda.synchronize()
-    print("After sync:", tensor)
+    # tensor = torch.ones(dim, dtype=torch.float32, device=device) * (args.rank + 1)
+
 
 
 def test_paradigm_sharded_ps_bandwidth(args, device, communicator: NCCLCommunicator):

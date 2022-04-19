@@ -154,6 +154,7 @@ class NCCLCommunicator:
             self.comm.send(tensor.data_ptr()+i*chunk_size*element_size, chunk_size, t_type, i, stream.ptr)
             self.comm.recv(buffer[i].data_ptr(), chunk_size, t_type, i, stream.ptr)
         cupy.cuda.nccl.groupEnd()
+
         print(buffer[0])
         for i in range(1, self.world_size):
             print(buffer[i])
