@@ -149,7 +149,9 @@ class NCCLCommunicator:
         buffer = [torch.zeros(chunk_size) for _ in range(self.world_size)]
         print("Declared buffer.")
         cupy.cuda.nccl.groupStart()
+        print("Tensor ptr:", tensor.data_ptr())
         for i in range(self.world_size):
+            print("Tensor ptr offset:", tensor.data_ptr()+i*chunk_size*element_size)
             self.comm.send(tensor.data_ptr()+i*chunk_size*element_size, chunk_size, t_type, i, stream.ptr)
             self.comm.recv(buffer[i].data_ptr(), chunk_size, t_type, i, stream.ptr)
         cupy.cuda.nccl.groupEnd()
