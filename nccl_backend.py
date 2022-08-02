@@ -144,9 +144,8 @@ class NCCLCommunicator:
         # First do all-to-all
         assert torch.numel(tensor.data) % self.world_size == 0
         chunk_size = torch.numel(tensor.data) // self.world_size
-        t_type= _type_torch_to_cupy(tensor.dtype)
+        t_type = _type_torch_to_cupy(tensor.dtype)
         element_size = tensor.data.element_size()
-        print("Declared buffer.")
         cupy.cuda.nccl.groupStart()
         print("Tensor ptr:", tensor.data_ptr())
         for i in range(self.world_size):

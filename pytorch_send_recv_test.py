@@ -3,7 +3,6 @@ import torch
 import argparse
 import time
 import torch.distributed as dist
-from nccl_backend import NCCLCommunicator
 
 
 def test_sync_send_recv_delay(args, device, communicator):
@@ -130,6 +129,7 @@ def main():
     else:
         device = torch.device('cpu')
     if args.dist_backend == 'cupy_nccl':
+        from nccl_backend import NCCLCommunicator
         communicator = NCCLCommunicator(rank=args.rank, intra_gpu_rank=args.cuda_id,
                                         world_size=args.world_size, master_ip=args.dist_url)
     else:
