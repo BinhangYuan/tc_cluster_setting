@@ -136,15 +136,12 @@ def main():
     estimated_bandwidth = 0
     e2e_time = 0
     for i in range(args.iter):
-        if i < 10:
-            test_sync_send_recv_bandwidth(args, device, communicator)
-        else:
-            current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator)
-            estimated_bandwidth += current_bandwidth
-            e2e_time += current_time
+        current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator)
+        estimated_bandwidth += current_bandwidth
+        e2e_time += current_time
         time.sleep(1)
-    estimated_bandwidth /= (args.iter - 10)
-    e2e_time /= (args.iter - 10)
+    estimated_bandwidth /= args.iter
+    e2e_time /= args.iter
     print("This is Rank-", args.rank, "see the result in Rank 0 node.")
     if args.rank == 0:
         print("This is the right result (recv side):")
