@@ -49,7 +49,7 @@ def test_sync_send_recv_delay(args, device, communicator):
     return estimated_delay
 
 
-def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0):
+def test_sync_send_recv_bandwidth(args, device, communicator):
     print("<==== Test bandwidth ====>")
     if args.rank == 1:
         send_tensor = torch.arange(args.dim, dtype=torch.float32, device=device)
@@ -68,7 +68,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
             torch.cuda.synchronize()
         end_time = time.time()
         total_time = end_time - start_time
-        estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
+        estimated_bandwidth = 8 * 4 * args.dim / total_time / 1024 / 1024 / 1024
         print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
     elif args.rank == 0:
@@ -87,7 +87,7 @@ def test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay=0)
             torch.cuda.synchronize()
         end_time = time.time()
         total_time = end_time - start_time
-        estimated_bandwidth = 8 * 4 * args.dim / (total_time - estimated_delay) / 1024 / 1024 / 1024
+        estimated_bandwidth = 8 * 4 * args.dim / total_time / 1024 / 1024 / 1024
         print('Recv tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
         print(recv_tensor[args.dim//2]==args.dim//2)
@@ -119,10 +119,6 @@ def main():
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
 
-    if args.iter <= 10:
-        print("Too few iters, increase your iter number!")
-        assert False
-
     if args.use_cuda:
         assert (torch.cuda.is_available())
         device = torch.device('cuda', args.cuda_id)
@@ -137,24 +133,13 @@ def main():
                                 rank=args.rank, world_size=args.world_size)
         communicator = dist
 
-    estimated_delay = 0
-    '''
-    for i in range(args.iter + 1):
-        if i == 0:
-            test_sync_send_recv_delay(args, device, communicator)
-        else:
-            estimated_delay += test_sync_send_recv_delay(args, device, communicator)
-        time.sleep(1)
-    estimated_delay /= args.iter
-    print("<=====Averaged estimated delay: ", estimated_delay * 1000, "ms.=====>")
-    '''
     estimated_bandwidth = 0
     e2e_time = 0
     for i in range(args.iter):
         if i < 10:
-            test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
+            test_sync_send_recv_bandwidth(args, device, communicator)
         else:
-            current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator, estimated_delay)
+            current_bandwidth, current_time = test_sync_send_recv_bandwidth(args, device, communicator)
             estimated_bandwidth += current_bandwidth
             e2e_time += current_time
         time.sleep(1)
