@@ -17,14 +17,14 @@ def test_sync_send_recv_delay(args, device, communicator):
             dist.barrier()
         if args.use_cuda:
             torch.cuda.synchronize()
-        start_time = time.time()
+        start_time = time.perf_counter_ns()
 
         communicator.send(send_tensor, dst=0)
 
         if args.use_cuda:
             torch.cuda.synchronize()
-        end_time = time.time()
-        estimated_delay = (end_time - start_time)/2
+        end_time = time.perf_counter_ns()
+        estimated_delay = 1e-9 * (end_time - start_time)/2
         print('Send tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
     elif args.rank == 0:
         recv_tensor = torch.zeros(1, dtype=torch.float32, device=device)
@@ -34,14 +34,14 @@ def test_sync_send_recv_delay(args, device, communicator):
             dist.barrier()
         if args.use_cuda:
             torch.cuda.synchronize()
-        start_time = time.time()
+        start_time = time.perf_counter_ns()
 
         communicator.recv(recv_tensor, src=1)
 
         if args.use_cuda:
             torch.cuda.synchronize()
-        end_time = time.time()
-        estimated_delay = (end_time - start_time)/2
+        end_time = time.perf_counter_ns()
+        estimated_delay = 1e-9 * (end_time - start_time)/2
         print('Recv tensor is done: estimated delay:', estimated_delay * 1000, "ms.")
         recv_tensor += random.random()
         if args.use_cuda:
@@ -60,14 +60,14 @@ def test_sync_send_recv_bandwidth(args, device, communicator):
             dist.barrier()
         if args.use_cuda:
             torch.cuda.synchronize()
-        start_time = time.time()
+        start_time = time.perf_counter_ns()
 
         communicator.send(send_tensor, dst=0)
 
         if args.use_cuda:
             torch.cuda.synchronize()
-        end_time = time.time()
-        total_time = end_time - start_time
+        end_time = time.perf_counter_ns()
+        total_time = 1e-9 * (end_time - start_time)
         estimated_bandwidth = 8 * 4 * args.dim / total_time / 1024 / 1024 / 1024
         print('Send tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
@@ -79,14 +79,14 @@ def test_sync_send_recv_bandwidth(args, device, communicator):
             dist.barrier()
         if args.use_cuda:
             torch.cuda.synchronize()
-        start_time = time.time()
+        start_time = time.perf_counter_ns()
 
         communicator.recv(recv_tensor, src=1)
 
         if args.use_cuda:
             torch.cuda.synchronize()
-        end_time = time.time()
-        total_time = end_time - start_time
+        end_time = time.perf_counter_ns()
+        total_time = 1e-9 * (end_time - start_time)
         estimated_bandwidth = 8 * 4 * args.dim / total_time / 1024 / 1024 / 1024
         print('Recv tensor is done: tensor size:<', args.dim, "> takes:", total_time, "second, estimated bandwidth:",
               estimated_bandwidth, "Gbps.")
