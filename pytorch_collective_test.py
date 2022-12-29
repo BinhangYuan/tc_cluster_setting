@@ -101,7 +101,7 @@ def main():
                         help='if this is set to True, will use cuda to train')
     parser.add_argument('--cuda-id', type=int, default=0, metavar='N',
                         help='cuda index, if the instance has multiple GPUs.')
-    parser.add_argument('--iter', type=int, default=10, metavar='R',
+    parser.add_argument('--iter', type=int, default=10000, metavar='R',
                         help='number of iterations for benchmark.')
     args = parser.parse_args()
 
@@ -120,14 +120,16 @@ def main():
 
     allreduce_time = 0
     for i in range(args.iter + 1):
+        print(f"AllReduce iter-{i}")
         dist.barrier()
         if i == 0:
             test_allreduce(args, device, communicator)
         else:
             allreduce_time += test_allreduce(args, device, communicator)
-        time.sleep(1)
+        # time.sleep(1)
     allreduce_time /= args.iter
 
+    """
     broadcast_time = 0
     for i in range(args.iter + 1):
         dist.barrier()
@@ -147,20 +149,20 @@ def main():
             reduce_time += test_reduce(args, device, communicator)
         time.sleep(1)
     reduce_time /= args.iter
-
+    """
     print("<=====Averaged local AllReduce time: ", allreduce_time * 1000, "ms.=====>")
-    print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
-    print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
+    # print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
+    # print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
 
     max_allreduce_time = collect_run_time(args, allreduce_time)
-    max_broadcast_time = collect_run_time(args, broadcast_time)
-    max_reduce_time = collect_run_time(args, reduce_time)
+    # max_broadcast_time = collect_run_time(args, broadcast_time)
+    # max_reduce_time = collect_run_time(args, reduce_time)
 
     if args.rank == 0:
         print("Backend: ", args.dist_backend)
         print("<=====Averaged global AllReduce time: ", max_allreduce_time * 1000, "ms.=====>")
-        print("<=====Averaged global Broadcast time: ", max_broadcast_time * 1000, "ms.=====>")
-        print("<=====Averaged global Reduce time: ", max_reduce_time * 1000, "ms.=====>")
+        # print("<=====Averaged global Broadcast time: ", max_broadcast_time * 1000, "ms.=====>")
+        # print("<=====Averaged global Reduce time: ", max_reduce_time * 1000, "ms.=====>")
 
 
 if __name__ == '__main__':
