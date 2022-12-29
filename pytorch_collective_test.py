@@ -23,7 +23,7 @@ def collect_run_time(args, local_run_time: float):
         return None
 
 
-def test_allreduce(args, device, communicator:NCCLCommunicator):
+def test_allreduce(args, device, communicator: NCCLCommunicator):
     print("<==== Test AllReduce ====>")
     dim = data_size_mb2dim(args.dim_mb)
     tensor = torch.arange(dim, dtype=torch.float32, device=device)
@@ -41,7 +41,7 @@ def test_allreduce(args, device, communicator:NCCLCommunicator):
     return total_time
 
 
-def test_broadcast(args, device, communicator:NCCLCommunicator):
+def test_broadcast(args, device, communicator: NCCLCommunicator):
     print("<==== Test Broadcast ====>")
     dim = data_size_mb2dim(args.dim_mb)
     if args.rank == 0:
@@ -111,14 +111,18 @@ def main():
     else:
         device = torch.device('cpu')
     if args.dist_backend == 'cupy_nccl':
+        print("Using NCCLCommunicator!")
         communicator = NCCLCommunicator(rank=args.rank, intra_gpu_rank=args.cuda_id,
                                         world_size=args.world_size, master_ip=args.dist_url)
     else:
+        print(f"Using PyTorch-{args.dist_backend}")
         dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
                                 rank=args.rank, world_size=args.world_size)
         communicator = dist
 
     allreduce_time = 0
+    broadcast_time = 0
+    reduce_time = 0
     for i in range(args.iter + 1):
         print(f"AllReduce iter-{i}")
         dist.barrier()
@@ -126,43 +130,38 @@ def main():
             test_allreduce(args, device, communicator)
         else:
             allreduce_time += test_allreduce(args, device, communicator)
-        # time.sleep(1)
-    allreduce_time /= args.iter
 
-    """
-    broadcast_time = 0
-    for i in range(args.iter + 1):
+        print(f"Broadcast iter-{i}")
         dist.barrier()
         if i == 0:
             test_broadcast(args, device, communicator)
         else:
             broadcast_time += test_broadcast(args, device, communicator)
-        time.sleep(1)
-    broadcast_time /= args.iter
 
-    reduce_time = 0
-    for i in range(args.iter + 1):
+        print(f"Reduce iter-{i}")
         dist.barrier()
         if i == 0:
             test_reduce(args, device, communicator)
         else:
             reduce_time += test_reduce(args, device, communicator)
-        time.sleep(1)
+
+    allreduce_time /= args.iter
+    broadcast_time /= args.iter
     reduce_time /= args.iter
-    """
+
     print("<=====Averaged local AllReduce time: ", allreduce_time * 1000, "ms.=====>")
-    # print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
-    # print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
+    print("<=====Averaged local Broadcast time: ", broadcast_time * 1000, "ms.=====>")
+    print("<=====Averaged local Reduce time: ", reduce_time * 1000, "ms.=====>")
 
     max_allreduce_time = collect_run_time(args, allreduce_time)
-    # max_broadcast_time = collect_run_time(args, broadcast_time)
-    # max_reduce_time = collect_run_time(args, reduce_time)
+    max_broadcast_time = collect_run_time(args, broadcast_time)
+    max_reduce_time = collect_run_time(args, reduce_time)
 
     if args.rank == 0:
         print("Backend: ", args.dist_backend)
         print("<=====Averaged global AllReduce time: ", max_allreduce_time * 1000, "ms.=====>")
-        # print("<=====Averaged global Broadcast time: ", max_broadcast_time * 1000, "ms.=====>")
-        # print("<=====Averaged global Reduce time: ", max_reduce_time * 1000, "ms.=====>")
+        print("<=====Averaged global Broadcast time: ", max_broadcast_time * 1000, "ms.=====>")
+        print("<=====Averaged global Reduce time: ", max_reduce_time * 1000, "ms.=====>")
 
 
 if __name__ == '__main__':

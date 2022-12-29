@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import cupy
+from cupy.cuda import nccl
 import torch.distributed as dist
 from typing import List
 
@@ -24,13 +25,15 @@ class NCCLCommunicator:
                  rank: int,
                  intra_gpu_rank: int,
                  world_size: int,
-                 master_ip: str):
+                 master_ip: str,
+                 check_async_error_flag: True):
         self.rank = rank
         self.intra_gpu_rank = intra_gpu_rank
         cupy.cuda.Device(self.intra_gpu_rank).use()
         self.world_size = world_size
         dist.init_process_group(backend='gloo', init_method=master_ip, world_size=world_size, rank=rank)
         self.store = dist.distributed_c10d._get_default_store()
+        self.check_async_error_flag = check_async_error_flag
 
         if self.rank == 0:
             cuda_id = cupy.cuda.nccl.get_unique_id()
@@ -50,6 +53,9 @@ class NCCLCommunicator:
     def barrier():
         dist.barrier()
 
+    def check_async_error(self):
+        self.comm.check_async_error()
+
     def send(self,
              tensor: torch.Tensor,
              dst: int,
@@ -61,6 +67,8 @@ class NCCLCommunicator:
             dst,
             stream.ptr
         )
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def recv(self,
              tensor: torch.Tensor,
@@ -73,6 +81,8 @@ class NCCLCommunicator:
             src,
             stream.ptr
         )
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def broadcast(self,
                   tensor: torch.Tensor,
@@ -85,6 +95,8 @@ class NCCLCommunicator:
             src,
             stream.ptr
         )
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def reduce(self,
                tensor: torch.Tensor,
@@ -100,6 +112,8 @@ class NCCLCommunicator:
             dst,
             stream.ptr
         )
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def all_to_all(self,
                    output_tensor_list: List[torch.Tensor],
@@ -111,6 +125,8 @@ class NCCLCommunicator:
             self.send(input_tensor_list[i], i, stream)
             self.recv(output_tensor_list[i], i, stream)
         cupy.cuda.nccl.groupEnd()
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def all_gather(self,
                    tensor: torch.Tensor,
@@ -123,6 +139,8 @@ class NCCLCommunicator:
             self.send(tensor, i, stream)
             self.recv(output_tensor_list[i], i, stream)
         cupy.cuda.nccl.groupEnd()
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def all_reduce(self,
                    tensor: torch.Tensor,
@@ -136,6 +154,8 @@ class NCCLCommunicator:
             op,
             stream.ptr
         )
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def all_reduce_opt(self,
                        tensor: torch.Tensor,
@@ -163,6 +183,8 @@ class NCCLCommunicator:
             self.comm.send(buffer[0].data_ptr(), chunk_size, t_type, i, stream.ptr)
             self.comm.recv(tensor.data_ptr()+i*chunk_size*element_size, chunk_size, t_type, i, stream.ptr)
         cupy.cuda.nccl.groupEnd()
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def scatter(self,
                 tensor: torch.Tensor,
@@ -187,6 +209,8 @@ class NCCLCommunicator:
                 stream
             )
         cupy.cuda.nccl.groupEnd()
+        if self.check_async_error_flag:
+            self.check_async_error()
 
     def gather(self,
                tensor: torch.Tensor,
@@ -211,3 +235,5 @@ class NCCLCommunicator:
                 stream
             )
         cupy.cuda.nccl.groupEnd()
+        if self.check_async_error_flag:
+            self.check_async_error()
