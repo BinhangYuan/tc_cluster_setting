@@ -26,7 +26,7 @@ class NCCLCommunicator:
                  intra_gpu_rank: int,
                  world_size: int,
                  master_ip: str,
-                 check_async_error_flag: True):
+                 check_async_error_flag: bool = True):
         self.rank = rank
         self.intra_gpu_rank = intra_gpu_rank
         cupy.cuda.Device(self.intra_gpu_rank).use()
